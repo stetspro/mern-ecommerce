@@ -8,6 +8,7 @@ app.use(express.json());
 
 app.use('/static', express.static(__dirname + '/public'))
 
+app.get('/', (req, res) => { res.send("Servidor Express") });
 app.use('/api/products/', productsRouter);
 app.use('/api/carts/', cartsRouter);
 
