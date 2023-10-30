@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
         return res.send({ products: productsLimited });
     }
 
-    return res.send({ products });
+    return res.render('home', { products });
 });
 
 router.get("/:pid", async (req, res) => {

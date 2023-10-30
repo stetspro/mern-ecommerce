@@ -8,10 +8,10 @@ router.post("/", async (req, res) => {
     const data = req.body;
     try {
         const createCartRes = await cartManager.createCart(data);
-        return res.send({ cartId: createCartRes });
+        return res.json({ cartId: createCartRes });
     }
     catch(error) {
-        res.status(500).send({ error: "Internal server error" });
+        res.status(500).json({ error: "Internal server error" });
     }
     
 });
@@ -21,13 +21,13 @@ router.get("/:cid", async (req, res) => {
 
     try {
         const getCartProductsRes = await cartManager.getCartProducts(cid);
-        return res.send({ products: getCartProductsRes });
+        return res.json({ products: getCartProductsRes });
     }
     catch(error) {
         if (error instanceof CartNotFoundError) {
-            res.status(404).send({ error: error.message });
+            res.status(404).json({ error: error.message });
         } else {
-            res.status(500).send({ error: "Internal server error" });
+            res.status(500).json({ error: "Internal server error" });
         }
     }
 });
@@ -38,13 +38,13 @@ router.post("/:cid/product/:pid", async (req, res) => {
 
     try {
         const addProductsRes = await cartManager.addProductsToCart(cid, pid);
-        return res.send({ cart: addProductsRes });
+        return res.json({ cart: addProductsRes });
     }
     catch(error) {
         if (error instanceof CartNotFoundError) {
-            res.status(404).send({ error: error.message });
+            res.status(404).json({ error: error.message });
         } else {
-            res.status(500).send({ error: "Internal server error" });
+            res.status(500).json({ error: "Internal server error" });
         }
     }
 });
