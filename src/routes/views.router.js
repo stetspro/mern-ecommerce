@@ -4,8 +4,14 @@ import { ProductManager, ProductNotFoundError }  from '../services/products.serv
 const router = Router();
 const productManager = new ProductManager();
 
-router.get("/realtimeproducts", async (req, res) => {
+router.get("/", async (req, res) => {
+    const products = await productManager.getProducts();
+    return res.render('home', { products });
+});
 
+router.get("/realtimeproducts", async (req, res) => {
+    const products = await productManager.getProducts();
+    return res.render('realTimeProducts', { products });
 });
 
 export default router;
