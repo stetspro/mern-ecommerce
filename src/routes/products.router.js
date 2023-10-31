@@ -10,10 +10,10 @@ router.get("/", async (req, res) => {
     
     if(limit) {
         const productsLimited = products.slice(0, limit);
-        return res.send({ products: productsLimited });
+        return res.json({ products: productsLimited });
     }
 
-    return res.render('home', { products });
+    return res.json({ products });
 });
 
 router.get("/:pid", async (req, res) => {
@@ -21,13 +21,13 @@ router.get("/:pid", async (req, res) => {
 
     try {
         const product = await productManager.getProductById(pid);
-        return res.send({ product });
+        return res.json({ product });
     }
     catch(error) {
         if (error instanceof ProductNotFoundError) {
-            res.status(404).send({ error: error.message });
+            res.status(404).json({ error: error.message });
         } else {
-            res.status(500).send({error: "Internal server error: " + error.message });
+            res.status(500).json({error: "Internal server error: " + error.message });
         }
     }
     
@@ -38,10 +38,10 @@ router.post("/", async (req, res) => {
 
     try {
         const addProductRes = await productManager.addProduct(data);
-        return res.send({ productId: addProductRes });
+        return res.json({ productId: addProductRes });
     }
     catch(error) {
-        res.status(500).send({ error: "Internal server error: " + error.message });
+        res.status(500).json({ error: "Internal server error: " + error.message });
     }
 });
 
@@ -51,13 +51,13 @@ router.put("/:pid", async (req, res) => {
 
     try {
         const updateProductRes = await productManager.updateProduct(pid, data);
-        return res.send({ productId: updateProductRes });
+        return res.json({ productId: updateProductRes });
     }
     catch(error) {
         if (error instanceof ProductNotFoundError) {
-            res.status(404).send({ error: error.message });
+            res.status(404).json({ error: error.message });
         } else {
-            res.status(500).send({error: "Internal server error: " + error.message });
+            res.status(500).json({error: "Internal server error: " + error.message });
         }
     }
    
@@ -67,13 +67,13 @@ router.delete("/:pid", async (req, res) => {
     const pid = parseInt(req.params.pid);
     try {
         const deleteProductRes = await productManager.deleteProduct(pid);
-        return res.send({ productId: deleteProductRes });
+        return res.json({ productId: deleteProductRes });
     }
     catch(error) {
         if (error instanceof ProductNotFoundError) {
-            res.status(404).send({ error: error.message });
+            res.status(404).json({ error: error.message });
         } else {
-            res.status(500).send({ error: "Internal server error: " + error.message });
+            res.status(500).json({ error: "Internal server error: " + error.message });
         }
     }
 });
