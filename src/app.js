@@ -4,6 +4,10 @@ import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import viewsRouter from './routes/views.router.js';
 import handlebars from 'express-handlebars';
+import { Server } from 'socket.io';
+import { ProductManager } from './services/products.service.js';
+
+const productManager = new ProductManager();
 
 const app = express();
 app.engine("handlebars", handlebars.engine());
@@ -20,4 +24,25 @@ app.use('/api/products/', productsRouter);
 app.use('/api/carts/', cartsRouter);
 app.use('/api/views/', viewsRouter);
 
-app.listen(process.env.PORT, () => console.log(`Corriendo en el puerto ${process.env.PORT}`));
+const httpServer = app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
+const socketServer = new Server(httpServer);
+
+// <--- Socket Connection --->
+
+socketServer.on('connection', async socket => {
+    console.log("New client connection");
+
+    socket.emit('products', await productManager.getProducts());
+
+    socket.on("onaddproduct", async product => {
+        await productManager.addProduct(product);
+        let products = await productManager.getProducts();
+        socketServer.sockets.emit('products', products);
+    });
+
+    socket.on("ondeleteproduct", async pid => {
+        await productManager.deleteProduct(pid);
+        let products = await productManager.getProducts();
+        socketServer.sockets.emit('products', products);  
+    });
+})
