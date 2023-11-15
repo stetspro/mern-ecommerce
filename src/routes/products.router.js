@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ProductManager, ProductNotFoundError }  from '../services/products.service.js';
+import { ProductManager, ProductNotFoundError }  from '../dao/services/product.service.js';
 
 const router = Router();
 const productManager = new ProductManager();
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:pid", async (req, res) => {
-    const pid = parseInt(req.params.pid);
+    const pid = req.params.pid;
 
     try {
         const product = await productManager.getProductById(pid);
@@ -46,7 +46,7 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:pid", async (req, res) => {
-    const pid = parseInt(req.params.pid);
+    const pid = req.params.pid;
     const data = req.body;
 
     try {
@@ -64,7 +64,8 @@ router.put("/:pid", async (req, res) => {
 });
 
 router.delete("/:pid", async (req, res) => {
-    const pid = parseInt(req.params.pid);
+    const pid = req.params.pid;
+    
     try {
         const deleteProductRes = await productManager.deleteProduct(pid);
         return res.json({ productId: deleteProductRes });

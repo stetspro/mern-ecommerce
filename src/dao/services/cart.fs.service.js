@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { ProductManager } from './products.service.js';
+import { ProductManager } from './product.fs.service.js';
 
 export class CartNotFoundError extends Error {
     constructor(message) {

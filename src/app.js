@@ -5,7 +5,8 @@ import cartsRouter from './routes/carts.router.js';
 import viewsRouter from './routes/views.router.js';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
-import { ProductManager } from './services/products.service.js';
+import { ProductManager } from './dao/services/product.service.js';
+import 'dotenv/config'
 
 const productManager = new ProductManager();
 
@@ -22,7 +23,7 @@ app.use(express.static(__dirname + '/public'));
 app.get('/', (req, res) => { res.send("Servidor Express") });
 app.use('/api/products/', productsRouter);
 app.use('/api/carts/', cartsRouter);
-app.use('/api/views/', viewsRouter);
+app.use('/views/', viewsRouter);
 
 const httpServer = app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
 const socketServer = new Server(httpServer);
