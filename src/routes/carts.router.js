@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:cid", async (req, res) => {
-    const cid = parseInt(req.params.cid);
+    const cid = req.params.cid;
 
     try {
         const getCartProductsRes = await cartManager.getCartProducts(cid);
@@ -33,8 +33,8 @@ router.get("/:cid", async (req, res) => {
 });
 
 router.post("/:cid/product/:pid", async (req, res) => {
-    const cid = parseInt(req.params.cid);
-    const pid = parseInt(req.params.pid);
+    const cid = req.params.cid;
+    const pid = req.params.pid;
 
     try {
         const addProductsRes = await cartManager.addProductsToCart(cid, pid);
