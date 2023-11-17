@@ -1,0 +1,42 @@
+<div class="bg-white">
+    <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+        <h2 class="text-2xl font-bold tracking-tight text-gray-900">Chat</h2>
+
+        <ul role="list" id="messagesContainer" class="divide-y divide-gray-100">
+            {{#if messages}}
+                {{#each messages}}
+                    <li class="flex justify-between gap-x-6 py-5">
+                        <div class="flex min-w-0 gap-x-4">
+                            <img class="h-12 w-12 flex-none rounded-full bg-gray-50" src="https://i.pinimg.com/originals/a8/8e/46/a88e4663a54e7fea22c7a88661c738e2.jpg" alt="">
+                            <div class="min-w-0 flex-auto">
+                                <p class="text-sm font-semibold leading-6 text-gray-900">{{this.user}}</p> {{! Email }}
+                                <p class="mt-1 truncate text-xs leading-5 text-gray-700">{{this.message}}</p> {{! Message }}
+                            </div>
+                        </div>
+                    </li>
+                {{/each}}
+            {{else}}
+                <p>No messages</p>
+            {{/if}}
+        </ul>
+
+        <form onsubmit="return sendMessage()">
+            <div class="w-full mt-4 mb-4 border border-gray-200 rounded-lg border-gray-100">
+                <div class="px-4 py-2 bg-white rounded-t-lg focus:ring-0">
+                    <label for="message" class="sr-only">Your comment</label>
+                    <textarea name="message" id="message" rows="4" class="w-full px-0 text-sm focus:ring-0 text-gray-900 bg-white border-0 placeholder-gray-400" placeholder="Write a comment..." required></textarea>
+                </div>
+                <div class="flex items-center justify-between px-3 py-2">
+                    <input type="text" name="user" id="user" class="w-1/2 text-sm  px-4 py-2 border rounded-lg placeholder:text-gray-400" placeholder="Enter your email here">
+
+                    <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 focus:ring-blue-900 hover:bg-blue-800">
+                        Post comment
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat.js"></script>
