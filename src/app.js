@@ -23,7 +23,7 @@ app.use(express.json());
 
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', (req, res) => { res.send("Servidor Express") });
+app.get('/', (req, res) => { res.render('home') });
 app.use('/api/products/', productsRouter);
 app.use('/api/carts/', cartsRouter);
 app.use('/views/', viewsRouter);
@@ -37,7 +37,7 @@ const socketServer = new Server(httpServer);
 socketServer.on('connection', async socket => {
     console.log("New client connection");
 
-    // ------- Real time products sockets --------
+    // <--- Real time products sockets --->
     socket.emit('products', await productManager.getProducts());
 
     socket.on("onaddproduct", async product => {
@@ -52,7 +52,7 @@ socketServer.on('connection', async socket => {
         socketServer.sockets.emit('products', products);  
     });
 
-    // ------- Chat sockets --------
+    // <--- Chat sockets --->
     socket.emit('messages', await messageManager.getAllMessages());
 
     socket.on('new-message', async (message) => {

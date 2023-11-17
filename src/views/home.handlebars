@@ -1,31 +1,17 @@
 <div class="bg-white">
     <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-        <h2 class="text-2xl font-bold tracking-tight text-gray-900">Product List</h2>
-
-        {{#if products}}
-            <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                {{#each products}}
-                    <div class="group relative">
-                        <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                            <img src="{{this.thumbnail}}" alt="{{this.title}}" class="h-full w-full object-cover object-center lg:h-full lg:w-full">
-                        </div>
-                        <div class="mt-4 flex justify-between">
-                            <div>
-                                <h3 class="text-sm text-gray-700">
-                                <a href="#">
-                                    <span aria-hidden="true" class="absolute inset-0"></span>
-                                    {{this.title}}
-                                </a>
-                                </h3>
-                                <p class="mt-1 text-sm text-gray-500">{{this.description}}</p>
-                            </div>
-                            <p class="text-sm font-medium text-gray-900">${{this.price}}</p>
-                        </div>
-                    </div>
-                {{/each}}
-            </div>
-        {{else}}
-            <p>No products</p>
-        {{/if}}
+        <div class="text-5xl font-extrabold ...">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-400">
+                Ghibli Store
+            </span>
+        </div>
+        
+        <div class="flex flex-col m-8 gap-4">
+            <h2 class="text-2xl font-bold tracking-tight text-gray-900">Views:</h2>
+            <a class="text-lg no-underline hover:underline" href="/views/">Product list</a>
+            <a class="text-lg no-underline hover:underline" href="/views/realtimeproducts/">Real time products</a>
+            <a class="text-lg no-underline hover:underline" href="/chat/">Chat</a>
+        </div>
+        
     </div>
 </div>
