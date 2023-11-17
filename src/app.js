@@ -3,12 +3,15 @@ import { __dirname } from './utils.js';
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import viewsRouter from './routes/views.router.js';
+import chatRouter from './routes/chat.router.js';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import { ProductManager } from './dao/services/product.service.js';
+import { MessageManager } from './dao/services/message.service.js';
 import 'dotenv/config'
 
 const productManager = new ProductManager();
+const messageManager = new MessageManager();
 
 const app = express();
 app.engine("handlebars", handlebars.engine());
@@ -24,6 +27,7 @@ app.get('/', (req, res) => { res.send("Servidor Express") });
 app.use('/api/products/', productsRouter);
 app.use('/api/carts/', cartsRouter);
 app.use('/views/', viewsRouter);
+app.use('/chat/', chatRouter);
 
 const httpServer = app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
 const socketServer = new Server(httpServer);
@@ -33,6 +37,7 @@ const socketServer = new Server(httpServer);
 socketServer.on('connection', async socket => {
     console.log("New client connection");
 
+    // ------- Real time products sockets --------
     socket.emit('products', await productManager.getProducts());
 
     socket.on("onaddproduct", async product => {
@@ -45,5 +50,16 @@ socketServer.on('connection', async socket => {
         await productManager.deleteProduct(pid);
         let products = await productManager.getProducts();
         socketServer.sockets.emit('products', products);  
+    });
+
+    // ------- Chat sockets --------
+    socket.emit('messages', await messageManager.getAllMessages());
+
+    socket.on('new-message', async (message) => {
+        console.log(message);
+        await messageManager.saveMessage(message);
+        let messages = await messageManager.getAllMessages();
+        console.log(messages)
+        socketServer.sockets.emit('messages', messages);
     });
 })
