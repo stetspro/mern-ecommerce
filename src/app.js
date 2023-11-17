@@ -56,10 +56,8 @@ socketServer.on('connection', async socket => {
     socket.emit('messages', await messageManager.getAllMessages());
 
     socket.on('new-message', async (message) => {
-        console.log(message);
         await messageManager.saveMessage(message);
         let messages = await messageManager.getAllMessages();
-        console.log(messages)
         socketServer.sockets.emit('messages', messages);
     });
 })
