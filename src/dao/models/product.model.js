@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 import 'dotenv/config';
 
 const dbConnection = mongoose.createConnection(process.env.MONGO_URI_ECOMMERCE);
@@ -15,5 +16,7 @@ const productSchema = new mongoose.Schema({
     status: { type: Boolean, required: true },
     category: { type: String, required: true, max: 100, enum: ['toys', 'decoration', 'accesories'] }
 });
+
+productSchema.plugin(mongoosePaginate);
 
 export const productModel = dbConnection.model(productCollection, productSchema);

@@ -42,14 +42,14 @@ socketServer.on('connection', async socket => {
 
     socket.on("onaddproduct", async product => {
         await productManager.addProduct(product);
-        let products = await productManager.getProducts();
-        socketServer.sockets.emit('products', products);
+        const data = await productManager.getProducts();
+        socketServer.sockets.emit('products', data);
     });
 
     socket.on("ondeleteproduct", async pid => {
         await productManager.deleteProduct(pid);
-        let products = await productManager.getProducts();
-        socketServer.sockets.emit('products', products);  
+        const data = await productManager.getProducts();
+        socketServer.sockets.emit('products', data);  
     });
 
     // <--- Chat sockets --->
