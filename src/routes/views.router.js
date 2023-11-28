@@ -5,14 +5,15 @@ const router = Router();
 const productManager = new ProductManager();
 
 router.get("/", async (req, res) => {
-    const products = await productManager.getProducts();
-    return res.render('productList', { products });
+    const data = await productManager.getProducts();
+  
+    return res.render('productList', { products: data.payload });
 });
 
 router.get("/realtimeproducts", async (req, res) => {
-    const products = await productManager.getProducts();
-   
-    return res.render('realTimeProducts', { products });
+    const data = await productManager.getProducts();
+
+    return res.render('realTimeProducts', { products: data.payload });
 });
 
 export default router;

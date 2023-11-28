@@ -5,14 +5,11 @@ const router = Router();
 const productManager = new ProductManager();
 
 router.get("/", async (req, res) => {
-    const products = await productManager.getProducts();
-    const { limit } = req.query;
-    
-    if(limit) {
-        const productsLimited = products.slice(0, limit);
-        return res.json({ products: productsLimited });
-    }
+    const { limit, page, sort, query } = req.query;
+    const baseUrl = `${req.protocol}://${req.get('host')}${req.originalUrl.split('?')[0]}`;
 
+    const products = await productManager.getProducts(limit, page, sort, query, baseUrl);
+    
     return res.json({ products });
 });
 

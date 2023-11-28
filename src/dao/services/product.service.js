@@ -20,8 +20,8 @@ export class ProductManager {
     }
 
     #isUniqueCode = async (code) => {
-        const productsArray = await this.getProducts();
-        return !productsArray.some(product => product.code === code);
+        const product = await productModel.find({ code });
+        return product.length === 0;
     }
 
     addProduct = async ({title, description, price, thumbnail, code, stock, status, category }) => {
@@ -66,10 +66,32 @@ export class ProductManager {
         return product;
     };
 
-    getProducts = async () => {
+    getProducts = async (limit = 10, page = 1, sort, query = {}, baseUrl) => {
         try {
-            const products = await productModel.find({}).lean();
-            return products;
+            const options = { limit, page, lean: true };
+
+            if (sort == 'asc') {
+                options.sort = { price: 1 };
+            } else if (sort == 'desc') {
+                options.sort = { price: -1 };
+            }
+            
+            const data = await productModel.paginate(query, options);
+            
+            const response = {
+                status: 'success',
+                payload: data.docs,
+                totalPages: data.totalPages,
+                page: data.page,
+                prevPage: data.prevPage,
+                nextPage: data.nextPage,
+                hasPrevPage: data.hasPrevPage,
+                hasNextPage: data.hasNextPage,
+                prevLink: data.hasPrevPage ? `${baseUrl}/api/products?limit=${limit}&page=${data.prevPage}` : null,
+                nextLink: data.hasNextPage ? `${baseUrl}/api/products?limit=${limit}&page=${data.nextPage}` : null
+            }
+            
+            return response;
         }
         catch(error) {
             throw new FileError('Error while getting products: ' + error.message);
