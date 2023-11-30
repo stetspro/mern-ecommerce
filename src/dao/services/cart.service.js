@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { ProductManager } from './product.fs.service.js';
 import { cartModel } from '../models/cart.model.js';
+import { productModel } from '../models/product.model.js';
 
 export class CartNotFoundError extends Error {
     constructor(message) {
@@ -29,7 +30,7 @@ export class CartManager {
 
             const res = await cartModel.create(cart);
 
-            return id;
+            return res;
         }
         catch(error) {
             throw new FileError('Error while creating a cart: ' + error.message);
@@ -39,7 +40,8 @@ export class CartManager {
 
     getCartById = async (id) => {
         try {
-            const cart = await cartModel.findById(id).lean();
+            const cart = await cartModel.findById(id).populate({ path: 'products.id', model: productModel}).lean();
+            
             return cart;
         }
         catch(error) {
@@ -57,51 +59,86 @@ export class CartManager {
         };
     };
 
-    getCartProducts = async (cid) => {
-        const cart = await this.getCartById(cid);
-
-        if(!cart) {
-            throw new CartNotFoundError("A cart with that ID does not exist.");
-        };
-
-        const productManager = new ProductManager();
-
-        const productsPromises = cart?.products?.map(async (item) => {
-            const pid = item.product;
-            const product = await productManager.getProductById(pid);
-            product.quantity = item.quantity;
-            return product;
-        });
-    
-        const products = await Promise.all(productsPromises);
-        return products;
-    }
-
-    addProductsToCart = async (cid, pid) => {
+    addProductInCart = async (cid, pid, quantity) => {
         try {
-            const cart = await this.getCartById(cid);
-            
-            if(!cart) {
-                throw new CartNotFoundError("A cart with that ID does not exist.");
-            };
-        
-            const existingProductIndex = cart.products.findIndex(item => item.product === pid);
-        
-            if (existingProductIndex !== -1) {
-                cart.products[existingProductIndex].quantity++;
-            } else {
-                cart.products.push({
-                    product: pid,
-                    quantity: 1,
-                });
-            }
-        
-            cartModel.findByIdAndUpdate(cid, cart, { new: true }).lean();
+            const query = { _id: cid, 'products.id': pid };
+            const update = { $inc: { 'products.$.quantity': quantity } };
+            const options = { new: true, upsert: true };
 
-            return cart;
+            const res = await cartModel.findOneAndUpdate(query, update, options);
+    
+            return res;
+        } catch (error) {
+            console.error(error.message);
         }
-        catch(error) {
-            throw new FileError('Error adding product to cart: ' + error.message);
+    };
+
+    addNewProductToCart = async (cid, pid) => {
+        try {
+            const newProduct = {
+                id: pid,
+                quantity: 1
+            };
+    
+            const update = {
+                $push: { products: newProduct }
+            };
+    
+            const options = { new: true };
+    
+            const updatedCart = await cartModel.findByIdAndUpdate(cid, update, options).lean();
+    
+            return updatedCart;
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+    deleteProductFromCart = async (cid, pid) => {
+        try {
+            const update = {
+                $pull: { products: { id: pid } }
+            };
+    
+            const options = { new: true };
+    
+            const updatedCart = await cartModel.findByIdAndUpdate(cid, update, options).lean();
+    
+            if (!updatedCart) {
+                throw new Error("Product not found in cart");
+            }
+
+            return updatedCart;
+        } catch (error) {
+            throw new FileError('Error deleting product from cart: ' + error.message);
+        }
+    };    
+
+    updateCart = async (cid, products) => {
+        try {
+            const query = { _id: cid };
+            const update = { products: products };
+            const options = { new: true };
+    
+            const updatedCart = await cartModel.findOneAndUpdate(query, update, options).lean();
+    
+            if (!updatedCart) {
+                throw new CartNotFoundError("A cart with that ID does not exist.");
+            }
+    
+            return updatedCart;
+        } catch (error) {
+            throw new FileError('Error updating cart: ' + error.message);
+        }
+    };
+
+    deleteCart = async (cid) => {
+        try {
+            const res = this.updateCart(cid, []);
+
+            return res;
+        } catch (error) {
+            throw new FileError('Error deleting cart products: ' + error.message);
         }
     }
     

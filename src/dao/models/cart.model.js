@@ -5,14 +5,19 @@ const dbConnection = mongoose.createConnection(process.env.MONGO_URI_ECOMMERCE);
 
 const cartCollection = 'carts';
 
-const cartSchema = new mongoose.Schema({
+const CartSchema = new mongoose.Schema({
     timestamp: { type: Date, default: Date.now },
     products: {
         type: [
             {
-                product: {
+                _id: false,
+                id: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'products'
+                },
+                quantity: {
+                    type: Number,
+                    required: [true, "Quantity is required"]
                 }
             }
         ],
@@ -20,8 +25,11 @@ const cartSchema = new mongoose.Schema({
     }
 });
 
-cartSchema.pre('findOne', function() {
-    this.populate('products.product');
+CartSchema.set('toJSON', {
+    transform: (doc, ret) => {
+        delete ret.__v;
+        return ret;
+    }
 });
 
-export const cartModel = dbConnection.model(cartCollection, cartSchema);
+export const cartModel = dbConnection.model(cartCollection, CartSchema);
