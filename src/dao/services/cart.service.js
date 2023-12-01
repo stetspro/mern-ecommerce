@@ -1,5 +1,3 @@
-import fs from 'fs';
-import { ProductManager } from './product.fs.service.js';
 import { cartModel } from '../models/cart.model.js';
 import { productModel } from '../models/product.model.js';
 
@@ -59,13 +57,20 @@ export class CartManager {
         };
     };
 
-    addProductInCart = async (cid, pid, quantity) => {
+    addProductToCart = async (cid, pid, quantity) => {
         try {
-            const query = { _id: cid, 'products.id': pid };
-            const update = { $inc: { 'products.$.quantity': quantity } };
-            const options = { new: true, upsert: true };
+            const isProductInCart = await cartModel.findOne({ _id: cid, 'products.id': pid }).lean();
+            let res;
 
-            const res = await cartModel.findOneAndUpdate(query, update, options);
+            if(isProductInCart !== null) {
+                const query = { _id: cid, 'products.id': pid };
+                const update = { $inc: { 'products.$.quantity': quantity ? quantity : 1 } };
+                const options = { new: true, upsert: true };
+
+                res = await cartModel.findOneAndUpdate(query, update, options);
+            } else {
+                res = this.addNewProductToCart(cid, pid);
+            }
     
             return res;
         } catch (error) {

@@ -21,6 +21,9 @@
                             </div>
                             <p class="text-sm font-medium text-gray-900">${{this.price}}</p>
                         </div>
+                        <button style="z-index: 999; position:relative;" type="button" onclick="addToCart('{{this._id}}'); return false;" class="mt-5 bg-lime-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-lime-500">
+                            Add to Cart
+                        </button>
                     </div>
                 {{/each}}
             </div>
@@ -29,3 +32,13 @@
         {{/if}}
     </div>
 </div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const addToCart = (pid) => {
+        console.log("Add to cart: " + pid);
+        const socket = io();
+        socket.emit('onaddtocart', pid);
+        return false;
+    }
+</script>

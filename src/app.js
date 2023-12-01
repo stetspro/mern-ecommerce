@@ -8,9 +8,11 @@ import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import { ProductManager } from './dao/services/product.service.js';
 import { MessageManager } from './dao/services/message.service.js';
+import { CartManager } from './dao/services/cart.service.js';
 import 'dotenv/config'
 
 const productManager = new ProductManager();
+const cartManager = new CartManager();
 const messageManager = new MessageManager();
 
 const app = express();
@@ -36,6 +38,12 @@ const socketServer = new Server(httpServer);
 
 socketServer.on('connection', async socket => {
     console.log("New client connection");
+
+    // <--- Product List sockets --->
+    socket.on("onaddtocart", async (pid) => {
+        const cid = "6569232dfd90f493970a65cd";
+        await cartManager.addProductToCart(cid, pid);
+    });
 
     // <--- Real time products sockets --->
     socket.emit('products', await productManager.getProducts());
