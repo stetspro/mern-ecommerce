@@ -146,5 +146,21 @@ export class CartManager {
             throw new FileError('Error deleting cart products: ' + error.message);
         }
     }
+
+    getCartSubtotal = async (cid) => {
+        try {
+            const cart = await this.getCartById(cid);
+            const products = cart.products;
+            let subtotal = 0;
+
+            products.forEach(product => {
+                subtotal += product.id.price * product.quantity;
+            });
+
+            return subtotal;
+        } catch (error) {
+            throw new FileError('Error getting cart subtotal: ' + error.message);
+        }
+    }
     
 }

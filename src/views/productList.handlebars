@@ -30,6 +30,13 @@
         {{else}}
             <p>No products</p>
         {{/if}}
+
+        <div class="mt-6 flex justify-center text-center text-sm text-gray-500">   
+            <button style="z-index: 999; position:relative;" onclick="goToCart(); return false;" type="button" class="font-medium text-indigo-600 hover:text-indigo-500">
+                Go to cart
+                <span aria-hidden="true"> &rarr;</span>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -40,5 +47,9 @@
         const socket = io();
         socket.emit('onaddtocart', pid);
         return false;
+    }
+    
+    const goToCart = () => {
+        window.location.href = "/views/carts/6569232dfd90f493970a65cd";
     }
 </script>

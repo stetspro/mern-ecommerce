@@ -68,4 +68,7 @@ socketServer.on('connection', async socket => {
         let messages = await messageManager.getAllMessages();
         socketServer.sockets.emit('messages', messages);
     });
-})
+
+    // <--- Cart sockets --->
+    socket.emit('cart-subtotal', await cartManager.getCartSubtotal("6569232dfd90f493970a65cd"));
+});
