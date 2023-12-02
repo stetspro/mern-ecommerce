@@ -6,6 +6,10 @@ const router = Router();
 const productManager = new ProductManager();
 const cartManager = new CartManager();
 
+router.get("/", async (req, res) => {
+    res.render('home');
+});
+
 router.get("/products", async (req, res) => {
     const { limit, page, sort, query } = req.query;
     const data = await productManager.getProducts(limit, page, sort, query, '/views/');
