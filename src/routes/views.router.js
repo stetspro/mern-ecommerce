@@ -6,10 +6,19 @@ const router = Router();
 const productManager = new ProductManager();
 const cartManager = new CartManager();
 
-router.get("/", async (req, res) => {
-    const data = await productManager.getProducts();
-  
-    return res.render('productList', { products: data.payload });
+router.get("/products", async (req, res) => {
+    const { limit, page, sort, query } = req.query;
+    const data = await productManager.getProducts(limit, page, sort, query, '/views/');
+
+    return res.render('productList', { 
+        products: data.payload, 
+        totalPages: data.totalPages, 
+        currentPage: data.page, 
+        hasPrevPage: data.hasPrevPage, 
+        hasNextPage: data.hasNextPage, 
+        prevLink: data.prevLink, 
+        nextLink: data.nextLink 
+    });
 });
 
 router.get("/realtimeproducts", async (req, res) => {

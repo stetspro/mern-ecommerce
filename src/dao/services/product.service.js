@@ -66,7 +66,7 @@ export class ProductManager {
         return product;
     };
 
-    getProducts = async (limit = 10, page = 1, sort, query = {}, baseUrl) => {
+    getProducts = async (limit = 10, page = 1, sort, query = {}, baseUrl = "") => {
         try {
             const options = { limit, page, lean: true };
 
@@ -74,6 +74,10 @@ export class ProductManager {
                 options.sort = { price: 1 };
             } else if (sort == 'desc') {
                 options.sort = { price: -1 };
+            }
+
+            if (Object.keys(query).length > 0) {
+                query = JSON.parse(query);
             }
             
             const data = await productModel.paginate(query, options);
@@ -87,8 +91,8 @@ export class ProductManager {
                 nextPage: data.nextPage,
                 hasPrevPage: data.hasPrevPage,
                 hasNextPage: data.hasNextPage,
-                prevLink: data.hasPrevPage ? `${baseUrl}/api/products?limit=${limit}&page=${data.prevPage}` : null,
-                nextLink: data.hasNextPage ? `${baseUrl}/api/products?limit=${limit}&page=${data.nextPage}` : null
+                prevLink: data.hasPrevPage ? `${baseUrl}products?limit=${limit}&page=${data.prevPage}` : null,
+                nextLink: data.hasNextPage ? `${baseUrl}products?limit=${limit}&page=${data.nextPage}` : null
             }
             
             return response;

@@ -14,9 +14,24 @@ import 'dotenv/config'
 const productManager = new ProductManager();
 const cartManager = new CartManager();
 const messageManager = new MessageManager();
-
+  
 const app = express();
-app.engine("handlebars", handlebars.engine());
+app.engine("handlebars", handlebars.engine(
+    {
+        helpers: {
+            range: function (count) { 
+                const result = [];
+                for (let i = 0; i < count; ++i) {
+                    result.push(i+1);
+                }
+                return result;
+            },
+            eq: function (a, b) { 
+                return a == b; 
+            }
+        }
+    }
+));
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
