@@ -76,8 +76,8 @@ export class ProductManager {
                 options.sort = { price: -1 };
             }
 
-            if (Object.keys(query).length > 0) {
-                query = JSON.parse(query);
+            if (query && Object.keys(query).length !== 0) {
+                query = JSON.parse(query.toLowerCase());
             }
             
             const data = await productModel.paginate(query, options);
