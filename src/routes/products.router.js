@@ -6,7 +6,7 @@ const productManager = new ProductManager();
 
 router.get("/", async (req, res) => {
     const { limit, page, sort, query } = req.query;
-    const baseUrl = `${req.protocol}://${req.get('host')}${req.originalUrl.split('?')[0]}`;
+    const baseUrl = `${req.protocol}://${req.get('host')}${req.originalUrl.split('?')[0]}/api/`;
 
     const products = await productManager.getProducts(limit, page, sort, query, baseUrl);
     
