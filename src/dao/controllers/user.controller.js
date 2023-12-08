@@ -32,8 +32,7 @@ export const loginUser = async (req, res) => {
         if (user && user.password === password) 
         {
             const userName = `${user.name} ${user.lastName}`;
-            req.session.user = { id: user._id, name: userName, email: user.email };
-            req.session.role = user.role;
+            req.session.user = { id: user._id, name: userName, email: user.email, role: user.role };
 
             return res.status(201).json({ user });
         } 

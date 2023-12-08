@@ -18,7 +18,7 @@ const productManager = new ProductManager();
 const cartManager = new CartManager();
 const messageManager = new MessageManager();
   
-const app = express();
+export const app = express();
 app.engine("handlebars", handlebars.engine(
     {
         helpers: {
@@ -31,6 +31,9 @@ app.engine("handlebars", handlebars.engine(
             },
             eq: function (a, b) { 
                 return a == b; 
+            },
+            cl: function (v) { 
+                console.log(v); 
             }
         }
     }
@@ -49,8 +52,13 @@ app.use(session(
     }
 ));
 
-app.use(express.json());
+app.use(function(req, res, next){
+    res.locals.user = req.session.user;
 
+    next();
+  });
+
+app.use(express.json());
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', (req, res) => { res.render('home') });
