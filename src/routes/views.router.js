@@ -1,40 +1,19 @@
 import { Router } from "express";
-import { ProductManager, ProductNotFoundError }  from '../dao/services/product.service.js';
-import { CartManager } from '../dao/services/cart.service.js';
+import { authMiddleware } from "../middlewares/auth.js";
+import { getHomeView, getLoginView, getProducts, getRealTimeProducts, getRegisterView, getCartById } from "../dao/controllers/views.controller.js";
 
 const router = Router();
-const productManager = new ProductManager();
-const cartManager = new CartManager();
 
-router.get("/", async (req, res) => {
-    res.render('home');
-});
+router.get("/", getHomeView);
 
-router.get("/products", async (req, res) => {
-    const { limit, page, sort, query } = req.query;
-    const data = await productManager.getProducts(limit, page, sort, query, '/views/');
+router.get("/products", getProducts);
 
-    return res.render('productList', { 
-        products: data.payload, 
-        totalPages: data.totalPages, 
-        currentPage: data.page, 
-        hasPrevPage: data.hasPrevPage, 
-        hasNextPage: data.hasNextPage, 
-        prevLink: data.prevLink, 
-        nextLink: data.nextLink 
-    });
-});
+router.get("/realtimeproducts", authMiddleware, getRealTimeProducts);
 
-router.get("/realtimeproducts", async (req, res) => {
-    const data = await productManager.getProducts();
+router.get("/carts/:cid", authMiddleware, getCartById);
 
-    return res.render('realTimeProducts', { products: data.payload });
-});
+router.get("/login", getLoginView);
 
-router.get("/carts/:cid", async (req, res) => {
-    const data = await cartManager.getCartById(req.params.cid);
-    
-    return res.render('cart', { cart: data });
-});
+router.get("/register", getRegisterView);
 
 export default router;

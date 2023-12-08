@@ -4,11 +4,14 @@ import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import viewsRouter from './routes/views.router.js';
 import chatRouter from './routes/chat.router.js';
+import userRouter from './routes/user.router.js';
 import handlebars from 'express-handlebars';
+import MongoStore from 'connect-mongo';
 import { Server } from 'socket.io';
 import { ProductManager } from './dao/services/product.service.js';
 import { MessageManager } from './dao/services/message.service.js';
 import { CartManager } from './dao/services/cart.service.js';
+import session from 'express-session';
 import 'dotenv/config'
 
 const productManager = new ProductManager();
@@ -36,6 +39,16 @@ app.engine("handlebars", handlebars.engine(
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
+app.use(session(
+    {
+        store: MongoStore.create({ mongoUrl: process.env.MONGO_URI_ECOMMERCE, ttl: 3600 }),
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: process.env.NODE_ENV === 'prod' }
+    }
+));
+
 app.use(express.json());
 
 app.use(express.static(__dirname + '/public'));
@@ -43,6 +56,7 @@ app.use(express.static(__dirname + '/public'));
 app.get('/', (req, res) => { res.render('home') });
 app.use('/api/products/', productsRouter);
 app.use('/api/carts/', cartsRouter);
+app.use('/api/users/', userRouter);
 app.use('/views/', viewsRouter);
 app.use('/chat/', chatRouter);
 
