@@ -6,7 +6,7 @@ const cartManager = new CartManager();
 
 export const getProducts = async (req, res) => {
     const { limit, page, sort, query } = req.query;
-    const isAuth = req.session.user ? true : false;
+    const isAuth = req.session?.user ? true : false;
 
     const data = await productManager.getProducts(limit, page, sort, query, '/views/');
 
@@ -19,7 +19,7 @@ export const getProducts = async (req, res) => {
         prevLink: data.prevLink, 
         nextLink: data.nextLink ,
         isAuth: isAuth,
-        username: req.session.user ? req.session.user.name : ''
+        username: req.session?.user ? req.session.user.name : ''
     });
 };
 
@@ -36,10 +36,16 @@ export const getCartById = async (req, res) => {
 };
 
 export const getLoginView = async (req, res) => {
+    const isAuth = req.session.user ? true : false;
+    if (isAuth) return res.redirect('/views/products');
+    
     return res.render('login');
 };
 
 export const getRegisterView = async (req, res) => {
+    const isAuth = req.session.user ? true : false;
+    if (isAuth) return res.redirect('/views/products');
+
     return res.render('register');
 }
 
