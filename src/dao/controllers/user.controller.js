@@ -35,8 +35,6 @@ export const loginUser = async (req, res) => {
             req.session.user = { id: user._id, name: userName, email: user.email };
             req.session.role = user.role;
 
-            console.log(req.session, "from login")
-
             return res.status(201).json({ user });
         } 
         
