@@ -8,9 +8,9 @@ const userCollection = 'users';
 const userSchema = new mongoose.Schema(
     {
         name: { type: String, required: [true, "Name is required"] },
-        lastName: { type: String, required: [true, "Last name is required"] },
+        lastName: { type: String },
         email: { type: String, required: [true, "Email is required"], unique: true },
-        password: { type: String, required: [true, "Password is required"] },
+        password: { type: String },
         role: { type: String, default: "USER_ROLE", enum: ["ADMIN_ROLE", "USER_ROLE"] },
         status: { type: Boolean, default: true },
         creationDate: { type: Date, default: Date.now }
