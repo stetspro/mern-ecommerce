@@ -12,7 +12,10 @@ import { ProductManager } from './dao/services/product.service.js';
 import { MessageManager } from './dao/services/message.service.js';
 import { CartManager } from './dao/services/cart.service.js';
 import session from 'express-session';
+import bcrypt from 'bcrypt';
 import 'dotenv/config'
+import { initializePassport } from './config/passport.config.js';
+import passport from 'passport';
 
 const productManager = new ProductManager();
 const cartManager = new CartManager();
@@ -52,13 +55,17 @@ app.use(session(
     }
 ));
 
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(function(req, res, next){
     res.locals.user = req.session.user;
-
     next();
-  });
+});
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', (req, res) => { res.render('home') });
@@ -71,6 +78,13 @@ app.use('/chat/', chatRouter);
 const httpServer = app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
 const socketServer = new Server(httpServer);
 
+export const createHash = async (password) => {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+}
+
+export const compareHash = async (password, hash) => {
+    return bcrypt.compareSync(password, hash);
+}
 // <--- Socket Connection --->
 
 socketServer.on('connection', async socket => {

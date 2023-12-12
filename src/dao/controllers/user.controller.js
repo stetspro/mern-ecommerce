@@ -1,3 +1,4 @@
+import { compareHash, createHash } from "../../app.js";
 import { UserManager } from "../services/user.service.js";
 
 const userManager = new UserManager();
@@ -9,7 +10,8 @@ export const registerUser = async (req, res) => {
     
     try 
     {
-        const user = await userManager.registerUser(req.body); 
+        const passwordHashed = await createHash(password);
+        const user = await userManager.registerUser({...req.body, password: passwordHashed}); 
       
         if(user) return res.status(201).json({ user: user.email });
         
@@ -23,22 +25,14 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-
     try 
     {
-        const user = await userManager.getUserByEmail(email); 
+        if (!req.user) return res.status(400).json({ error: 'Invalid credentials' });
 
-        if (user && user.password === password) 
-        {
-            const userName = `${user.name} ${user.lastName}`;
-            req.session.user = { id: user._id, name: userName, email: user.email, role: user.role };
+        const userName = `${req.user.name} ${req.user.lastName}`;
+        req.session.user = { id: req.user._id, name: userName, email: req.user.email, role: req.user.role };
 
-            return res.status(201).json({ user });
-        } 
-        
-        return res.status(400).json({ error: 'Invalid credentials' });
-        
+        return res.status(201).json({ user: req.user.email });
     }
     catch (error) 
     {
