@@ -7,7 +7,7 @@ const cartManager = new CartManager();
 export const getProducts = async (req, res) => {
     const { limit, page, sort, query } = req.query;
     const isAuth = req.session?.user ? true : false;
-
+    console.log(req.session?.user)
     const data = await productManager.getProducts(limit, page, sort, query, '/views/');
 
     return res.render('productList', { 
