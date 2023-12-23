@@ -26,8 +26,8 @@ export const initializePassport = async () => {
                 }
         
                 const newUser = {
-                    name: profile._json.name,
-                    lastName: '',
+                    first_name: profile._json.name,
+                    last_name: '',
                     email: email,
                     password: ''
                 };

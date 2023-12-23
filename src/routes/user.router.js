@@ -17,9 +17,7 @@ router.post("/logout", logoutUser);
 router.get("/github", passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => {});
 
 router.get("/callbackgithub", passport.authenticate("github", { failureRedirect: "/views/login" }), async (req, res) => {
-    console.log(req.user);
-
-    req.session.user = { id: req.user._id, name: req.user.name, lastName: req.user.lastName, email: req.user.email, role: req.user.role };
+    req.session.user = { id: req.user._id, first_name: req.user.first_name, last_name: req.user.last_name, email: req.user.email, role: req.user.role };
 
     res.redirect("/views/products");
 });

@@ -19,7 +19,7 @@ export const getProducts = async (req, res) => {
         prevLink: data.prevLink, 
         nextLink: data.nextLink ,
         isAuth: isAuth,
-        username: req.session?.user ? req.session.user.name : ''
+        username: req.session?.user ? req.session.user.first_name : ''
     });
 };
 
