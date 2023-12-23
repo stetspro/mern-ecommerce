@@ -11,6 +11,7 @@ import { Server } from 'socket.io';
 import { ProductManager } from './dao/services/product.service.js';
 import { MessageManager } from './dao/services/message.service.js';
 import { CartManager } from './dao/services/cart.service.js';
+import { UserManager } from './dao/services/user.service.js';
 import session from 'express-session';
 import bcrypt from 'bcrypt';
 import 'dotenv/config'
@@ -20,6 +21,7 @@ import passport from 'passport';
 const productManager = new ProductManager();
 const cartManager = new CartManager();
 const messageManager = new MessageManager();
+const userManager = new UserManager();
   
 export const app = express();
 app.engine("handlebars", handlebars.engine(
@@ -37,6 +39,15 @@ app.engine("handlebars", handlebars.engine(
             },
             cl: function (v) { 
                 console.log(v); 
+            },
+            getCartSubtotal: function (products) {
+                let subtotal = 0;
+
+                products.forEach(product => {
+                    subtotal += product.id.price * product.quantity;
+                });
+
+                return subtotal;
             }
         }
     }
@@ -119,7 +130,4 @@ socketServer.on('connection', async socket => {
         let messages = await messageManager.getAllMessages();
         socketServer.sockets.emit('messages', messages);
     });
-
-    // <--- Cart sockets --->
-    socket.emit('cart-subtotal', await cartManager.getCartSubtotal("6569232dfd90f493970a65cd"));
 });
