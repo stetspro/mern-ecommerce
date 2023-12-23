@@ -39,7 +39,7 @@
             <div class="px-4 py-6 sm:px-6">
                 <div class="flex justify-between text-base font-medium text-gray-900">
                     <p>Subtotal</p>
-                    <p id="cart-subtotal"></p>
+                    <p id="cart-subtotal">{{ getCartSubtotal cart.products }}</p>
                 </div>
                 <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                 <div class="mt-6">
@@ -62,9 +62,6 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io();
-    socket.on('cart-subtotal', (subtotal) => {
-        document.getElementById('cart-subtotal').innerHTML = "$" + subtotal;
-    });
 
     const continueShopping = () => {
         window.location.href = "/views/products/";
