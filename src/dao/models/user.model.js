@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema(
         role: { type: String, default: "USER_ROLE", enum: ["ADMIN_ROLE", "USER_ROLE"] },
         status: { type: Boolean, default: true },
         creationDate: { type: Date, default: Date.now },
-        cart: { type: mongoose.Schema.Types.ObjectId, ref: cartModel }
+        cart: { type: mongoose.Schema.Types.ObjectId, ref: cartModel },
+        age: { type: Number, min: 18, max: 65 }
     }
 );
 
