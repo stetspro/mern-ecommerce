@@ -1,7 +1,9 @@
 import { compareHash, createHash } from "../../app.js";
 import { UserManager } from "../services/user.service.js";
+import { CartManager } from "../services/cart.service.js";
 
 const userManager = new UserManager();
+const cartManager = new CartManager();
 
 export const registerUser = async (req, res) => {
     const { password, confirmPassword } = req.body;
@@ -11,7 +13,16 @@ export const registerUser = async (req, res) => {
     try 
     {
         const passwordHashed = await createHash(password);
-        const user = await userManager.registerUser({...req.body, password: passwordHashed}); 
+        
+        const registerData = {
+            first_name: req.body.name,
+            last_name: req.body.lastName,
+            email: req.body.email,
+            password: passwordHashed,
+            cart: await cartManager.createCart()
+        }
+
+        const user = await userManager.registerUser(registerData); 
       
         if(user) return res.status(201).json({ user: user.email });
         
@@ -29,8 +40,8 @@ export const loginUser = async (req, res) => {
     {
         if (!req.user) return res.status(400).json({ error: 'Invalid credentials' });
 
-        const userName = `${req.user.name} ${req.user.lastName}`;
-        req.session.user = { id: req.user._id, name: userName, email: req.user.email, role: req.user.role };
+        const userName = `${req.user.first_name} ${req.user.last_name}`;
+        req.session.user = { id: req.user._id, first_name: userName, email: req.user.email, role: req.user.role };
 
         return res.status(201).json({ user: req.user.email });
     }
