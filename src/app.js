@@ -102,9 +102,8 @@ socketServer.on('connection', async socket => {
     console.log("New client connection");
 
     // <--- Product List sockets --->
-    socket.on("onaddtocart", async (pid) => {
-        const cid = "6569232dfd90f493970a65cd";
-        await cartManager.addProductToCart(cid, pid);
+    socket.on("onaddtocart", async (data) => {
+        await cartManager.addProductToCart(data.cid, data.pid);
     });
 
     // <--- Real time products sockets --->

@@ -47,7 +47,7 @@
                             </div>
                             <p class="text-sm font-medium text-gray-900">${{this.price}}</p>
                         </div>
-                        <button style="z-index: 999; position:relative;" type="button" onclick="addToCart('{{this._id}}'); return false;" class="mt-5 bg-lime-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-lime-500">
+                        <button style="z-index: 999; position:relative;" type="button" onclick="addToCart('{{this._id}}', '{{../cartId}}'); return false;" class="mt-5 bg-lime-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-lime-500">
                             Add to Cart
                         </button>
                     </div>
@@ -106,7 +106,7 @@
         {{/if}}
 
         <div class="mt-6 flex justify-center text-center text-sm text-gray-500">   
-            <button style="z-index: 999; position:relative;" onclick="goToCart(); return false;" type="button" class="font-medium text-indigo-600 hover:text-indigo-500">
+            <button style="z-index: 999; position:relative;" onclick="goToCart('{{cartId}}'); return false;" type="button" class="font-medium text-indigo-600 hover:text-indigo-500">
                 Go to cart
                 <span aria-hidden="true"> &rarr;</span>
             </button>
@@ -116,15 +116,21 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    const addToCart = (pid) => {
-        console.log("Add to cart: " + pid);
+    const addToCart = (pid, cid) => {
+        console.log("Add to cart: " + pid + " " + cid);
+        const data = {
+            pid: pid,
+            cid: cid
+        }
+
         const socket = io();
-        socket.emit('onaddtocart', pid);
+        socket.emit('onaddtocart', data);
         return false;
     }
     
-    const goToCart = () => {
-        window.location.href = "/views/carts/6569232dfd90f493970a65cd";
+    const goToCart = (cid) => {
+        console.log("Go to cart: " + cid);
+        window.location.href = "/views/carts/" + cid;
     }
 
     const goToPage = (url) => {
