@@ -40,8 +40,9 @@ export const loginUser = async (req, res) => {
     {
         if (!req.user) return res.status(400).json({ error: 'Invalid credentials' });
 
-        const userName = `${req.user.first_name} ${req.user.last_name}`;
-        req.session.user = { id: req.user._id, first_name: userName, email: req.user.email, role: req.user.role };
+        const { password, ...user } = req.user._doc;
+
+        req.session.user = { ...user };
 
         return res.status(201).json({ user: req.user.email });
     }
