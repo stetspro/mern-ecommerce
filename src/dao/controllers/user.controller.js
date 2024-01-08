@@ -1,6 +1,7 @@
-import { compareHash, createHash } from "../../app.js";
+import { createHash } from "../../app.js";
 import { UserManager } from "../services/user.service.js";
 import { CartManager } from "../services/cart.service.js";
+import { generateToken } from "../../utils.js";
 
 const userManager = new UserManager();
 const cartManager = new CartManager();
@@ -38,13 +39,26 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try 
     {
-        if (!req.user) return res.status(400).json({ error: 'Invalid credentials' });
+        if (!req.user) return res.status(401).json({ error: 'Invalid credentials' });
 
-        const { password, ...user } = req.user._doc;
+        const token = generateToken(req.user._doc);
 
-        req.session.user = { ...user };
+        res.cookie('access_token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'prod',
+            maxAge: 24 * 60 * 60 * 1000 // 1 day
+        });
 
-        return res.status(201).json({ user: req.user.email });
+        const { cart, role, first_name, email } = req.user._doc;
+
+        const user = {
+            cart,
+            role,
+            first_name,
+            email
+        }
+
+        return res.status(201).json(user);
     }
     catch (error) 
     {
@@ -54,6 +68,21 @@ export const loginUser = async (req, res) => {
 };
 
 export const logoutUser = async (req, res) => {
-    req.session.destroy();
+    res.clearCookie('access_token');
     res.status(200).json({ message: 'User logged out' });
 };
+
+export const getCurrentUser = async (req, res) => {
+    if(!req.user) return res.status(401).json({ message: "Unauthorized" });
+    
+    const { cart, role, first_name, email } = await userManager.getUserByEmail(req.user.email);
+
+    const user = {
+        cart,
+        role,
+        first_name,
+        email
+    }
+
+    res.status(200).json(user);
+}

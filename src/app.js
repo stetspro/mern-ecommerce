@@ -1,22 +1,20 @@
 import express from 'express';
+import 'dotenv/config'
+import passport from 'passport';
+import cookieParser from 'cookie-parser';
+import handlebars from 'express-handlebars';
+import { Server } from 'socket.io';
 import { __dirname } from './utils.js';
+import bcrypt, { compareSync } from 'bcrypt';
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import viewsRouter from './routes/views.router.js';
-import chatRouter from './routes/chat.router.js';
 import userRouter from './routes/user.router.js';
-import handlebars from 'express-handlebars';
-import MongoStore from 'connect-mongo';
-import { Server } from 'socket.io';
 import { ProductManager } from './dao/services/product.service.js';
 import { MessageManager } from './dao/services/message.service.js';
 import { CartManager } from './dao/services/cart.service.js';
 import { UserManager } from './dao/services/user.service.js';
-import session from 'express-session';
-import bcrypt from 'bcrypt';
-import 'dotenv/config'
 import { initializePassport } from './config/passport.config.js';
-import passport from 'passport';
 
 const productManager = new ProductManager();
 const cartManager = new CartManager();
@@ -56,35 +54,19 @@ app.engine("handlebars", handlebars.engine(
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
-app.use(session(
-    {
-        store: MongoStore.create({ mongoUrl: process.env.MONGO_URI_ECOMMERCE, ttl: 3600 }),
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: true,
-        cookie: { secure: process.env.NODE_ENV === 'prod' }
-    }
-));
+app.use(cookieParser());
 
 initializePassport();
 app.use(passport.initialize());
-app.use(passport.session());
-
-app.use(function(req, res, next){
-    res.locals.user = req.session.user;
-    next();
-});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', (req, res) => { res.render('home') });
+app.use('/views/', viewsRouter);
 app.use('/api/products/', productsRouter);
 app.use('/api/carts/', cartsRouter);
 app.use('/api/users/', userRouter);
-app.use('/views/', viewsRouter);
-app.use('/chat/', chatRouter);
 
 const httpServer = app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
 const socketServer = new Server(httpServer);

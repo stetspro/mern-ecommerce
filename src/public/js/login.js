@@ -16,12 +16,13 @@ const onSubmit = async () => {
             error.style.display = 'block';
             error.innerHTML = data.error;
         } else {
+            localStorage.setItem('user', JSON.stringify(data));
             window.location.href = '/views/products';
         }
 
         return false;
     }
     catch (error) {
-        console.log("error: ", error);
+        console.log("error: ", error.message);
     }
 }

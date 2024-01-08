@@ -14,6 +14,16 @@ export class UserManager {
             throw error;
         }
     }
+
+    getUserById = async (id) => {
+        try {
+            return await userModel.findById(id);
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
     
     registerUser = async (user) => {
         try {
