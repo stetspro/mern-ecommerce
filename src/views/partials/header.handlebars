@@ -9,39 +9,23 @@
 
         <div class="hidden lg:flex lg:gap-x-12">
             <a href="/views/products" class="text-sm font-semibold leading-6 text-gray-900">Products</a>
-
-            {{#if (eq @root.user.role "ADMIN_ROLE")}}
-                <a href="/views/realtimeproducts" class="text-sm font-semibold leading-6 text-gray-900">Add products</a>
-            {{/if}}
-
-            {{#if @root.user}}
-                <a href="/views/carts/{{@root.user.cart}}" class="text-sm font-semibold leading-6 text-gray-900">Cart</a>
-                <a href="/chat" class="text-sm font-semibold leading-6 text-gray-900">Chat</a>
-            {{/if}}
+            
+            <a href="/views/realtimeproducts" id="realTimeProductsRoute" class="text-sm font-semibold leading-6 text-gray-900 admin-only">Add products</a>
+            <a href="#" id="cartRoute" class="text-sm font-semibold leading-6 text-gray-900 hidden">Cart</a>
+            <a href="/views/chat" id="chatRoute" class="text-sm font-semibold leading-6 text-gray-900 hidden">Chat</a>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-            {{#if @root.user}}
-                <a href="#" onclick="logout(); return false;" class="text-sm font-semibold leading-6 text-gray-900">Log out <span aria-hidden="true">&rarr;</span></a>
-            {{else}}
-                <a href="/views/login" class="text-sm font-semibold leading-6 text-gray-900">Log in <span aria-hidden="true">&rarr;</span></a>
-            {{/if}}
+            <a href="#" onclick="logout(); return false;" class="hidden text-sm font-semibold leading-6 text-gray-900">Log out <span aria-hidden="true">&rarr;</span></a>
+            <a href="/views/login" id="loginBtn" class="text-sm font-semibold leading-6 text-gray-900">Log in <span aria-hidden="true">&rarr;</span></a>
+        
         </div>
     </nav>
 </header>
 
-<script>
-    const logout = async () => {
-        const response = await fetch('/api/users/logout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        const data = await response.json();
-        if (data.message) {
-            window.location.href = '/views/login';
-        }
+<script src="/js/header.js"></script>
 
-        return false;
+<style>
+    .admin-only {
+        display: none;
     }
-</script>
+</style>

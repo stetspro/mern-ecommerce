@@ -26,4 +26,25 @@ const updateChatHtml = (messages) => {
     document.getElementById('messagesContainer').innerHTML = html;
 }
 
+const initializeChat = async () => {
+    let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+    if(!user) {
+        user = await getCurrentUser();
+        localStorage.setItem('user',  JSON.stringify(user));
+    }
+
+    if(user && user.email) {
+        document.getElementById('user').value = user.email;
+    }
+
+    document.getElementById("messageForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        sendMessage();
+    });    
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await initializeChat();
+});
+
 socket.on('messages', (messages) => updateChatHtml(messages));

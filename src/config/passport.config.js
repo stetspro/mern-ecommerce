@@ -2,9 +2,13 @@ import passport from "passport";
 import { UserManager } from "../dao/services/user.service.js";
 import GitHubStrategy from "passport-github2";
 import { createHash, compareHash } from "../app.js";
-import local from 'passport-local'
+import local from 'passport-local';
+import jwt from 'passport-jwt';
+import 'dotenv/config';
 
-const LocalStrategy = local.Strategy
+const LocalStrategy = local.Strategy;
+const JWTStrategy = jwt.Strategy;
+const ExtractJWT = jwt.ExtractJwt;
 
 export const initializePassport = async () => {
     const userManager = new UserManager();
@@ -76,7 +80,7 @@ export const initializePassport = async () => {
                     return done(null, false);
                 }
 
-                if(!compareHash(user.password, password)) {
+                if(!compareHash(password, user.password)) {
                     console.error('password not valid');
                     return done(null, false);
                 }
@@ -87,7 +91,19 @@ export const initializePassport = async () => {
             }
         }
     ))
-    
+
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey: process.env.JWT_SECRET
+    }, async (jwtPayload, done) => {
+        try {
+            return done(null, jwtPayload);
+        }
+        catch (error) {
+            return done(error);
+        }
+    }));
+
     passport.serializeUser((user, done) => {
         done(null, user.email);
     });
@@ -97,4 +113,12 @@ export const initializePassport = async () => {
     
         done(null, user);
     });
+}
+
+const cookieExtractor = (req) => {
+    let token = null;
+    if (req && req.cookies) {
+        token = req.cookies['access_token'];
+    }
+    return token;
 }
