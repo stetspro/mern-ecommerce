@@ -8,7 +8,7 @@ const getCurrentUser = async () => {
 
     const data = await response.json();
    
-    if(!data) {
+    if(!data || data.error) {
         return;
     }
 
@@ -38,10 +38,10 @@ const initializeHeader = async () => {
     let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
     if (!user) {
         user = await getCurrentUser();
-        localStorage.setItem('user', JSON.stringify(user));
     }
 
     if(user) {
+        console.log(user)
         const hiddenElements = document.querySelectorAll('.hidden');
         hiddenElements.forEach(element => {
             element.classList.remove('hidden');

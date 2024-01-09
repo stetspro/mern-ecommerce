@@ -1,6 +1,7 @@
 import multer from 'multer';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
+import passport from 'passport';
 
 const storage = multer.diskStorage({
     //Carpeta donde se guarda el archivo
@@ -45,4 +46,19 @@ export const authorization = role => {
       return next()
     }
   
+}
+
+export const passportCall = (strategy, failureRedirect = "") => {
+    return async (req, res, next) => {
+        passport.authenticate(strategy, { session: false, failureRedirect }, function(err, user, info) {
+            if (err) return next(err); 
+            if (!user) { 
+                return res.status(401).send({ error: info?.messages ? info?.messages : info?.toString() }); 
+            }
+
+            req.user = user;
+            next();
+           
+        })(req, res, next);
+    }
 }

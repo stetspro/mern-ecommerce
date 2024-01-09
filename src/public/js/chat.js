@@ -30,7 +30,6 @@ const initializeChat = async () => {
     let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
     if(!user) {
         user = await getCurrentUser();
-        localStorage.setItem('user',  JSON.stringify(user));
     }
 
     if(user && user.email) {
