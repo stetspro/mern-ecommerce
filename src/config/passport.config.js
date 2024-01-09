@@ -76,7 +76,7 @@ export const initializePassport = async () => {
                 const user = await userManager.getUserByEmail(username);
 
                 if(!user) {
-                    console.error('user doent exist');
+                    console.error('user doesnt exist');
                     return done(null, false);
                 }
 

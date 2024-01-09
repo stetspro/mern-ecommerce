@@ -6,7 +6,7 @@ import {
     registerUser 
 } from "../dao/controllers/user.controller.js";
 import passport from "passport";
-import { generateToken } from "../utils.js";
+import { generateToken, passportCall } from "../utils.js";
 
 const router = Router();
 
@@ -30,6 +30,6 @@ router.get("/callbackgithub", passport.authenticate("github", { failureRedirect:
     res.redirect("/views/products");
 });
 
-router.get("/current", passport.authenticate("jwt", { session: false }), getCurrentUser);
+router.get("/current", passportCall("jwt"), getCurrentUser);
 
 export default router;

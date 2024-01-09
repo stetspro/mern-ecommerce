@@ -142,7 +142,6 @@
 
         if (!user) {
             user = await getCurrentUser();
-            localStorage.setItem('user',  JSON.stringify(user));
         }
         
         if(user && user.cart) {
