@@ -19,5 +19,6 @@ router.put("/:pid", updateProduct);
 
 router.delete("/:pid", deleteProduct);
 
+router.get("*", (req, res) => res.status(404).send("404 - Not Found!"));
 
 export default router;

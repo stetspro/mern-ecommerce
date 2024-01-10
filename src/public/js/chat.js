@@ -27,9 +27,11 @@ const updateChatHtml = (messages) => {
 }
 
 const initializeChat = async () => {
-    let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+    let user = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : null;
+
     if(!user) {
         user = await getCurrentUser();
+        if(user) sessionStorage["user"] = JSON.stringify(user);
     }
 
     if(user && user.email) {
