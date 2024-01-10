@@ -11,12 +11,12 @@ const onSubmit = async () => {
             body: JSON.stringify({ email, password }),
         });
         const data = await response.json();
-        if (data.error) {
+        if (data && data.error) {
             const error = document.getElementById('error');
             error.style.display = 'block';
             error.innerHTML = data.error;
-        } else {
-            localStorage.setItem('user', JSON.stringify(data));
+        } else if(data){
+            sessionStorage["user"] = JSON.stringify(data);
             window.location.href = '/views/products';
         }
 

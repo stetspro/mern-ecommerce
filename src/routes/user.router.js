@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { 
     getCurrentUser,
+    loginGithub,
     loginUser, 
     logoutUser, 
     registerUser 
@@ -18,18 +19,10 @@ router.post("/logout", logoutUser);
 
 router.get("/github", passport.authenticate("github", { scope: ["user:email"], session: false }), async (req, res) => {});
 
-router.get("/callbackgithub", passport.authenticate("github", { failureRedirect: "/views/login", session: false }), async (req, res) => {
-    const token = generateToken(req.user._doc);
-
-    res.cookie('access_token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'prod',
-        maxAge: 24 * 60 * 60 * 1000 // 1 day
-    });
-
-    res.redirect("/views/products");
-});
+router.get("/callbackgithub", passport.authenticate("github", { failureRedirect: "/views/login", session: false }), loginGithub);
 
 router.get("/current", passportCall("jwt"), getCurrentUser);
+
+router.get("*", (req, res) => res.status(404).send("404 - Not Found!"));
 
 export default router;

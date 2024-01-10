@@ -53,10 +53,24 @@ export const passportCall = (strategy, failureRedirect = "") => {
         passport.authenticate(strategy, { session: false, failureRedirect }, function(err, user, info) {
             if (err) return next(err); 
             if (!user) { 
-                return res.status(401).send({ error: info?.messages ? info?.messages : info?.toString() }); 
+                return res.status(401).json({ error: info?.messages ? info?.messages : info?.toString() }); 
             }
 
             req.user = user;
+            next();
+           
+        })(req, res, next);
+    }
+}
+
+export const passportAuthorization = (strategy) => {
+    return async (req, res, next) => {
+        passport.authenticate(strategy, { session: false }, function(err, user, info) {
+            if (err) return next(err); 
+
+            req.isAuth = user ? true : false;
+            req.role = user ? user.role : '';
+
             next();
            
         })(req, res, next);

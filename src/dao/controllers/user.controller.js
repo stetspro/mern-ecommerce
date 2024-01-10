@@ -67,6 +67,18 @@ export const loginUser = async (req, res) => {
     
 };
 
+export const loginGithub = async (req, res) => {
+    const token = generateToken(req.user._doc);
+
+    res.cookie('access_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'prod',
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
+
+    res.redirect("/views/products");
+}
+
 export const logoutUser = async (req, res) => {
     res.clearCookie('access_token');
     res.status(200).json({ message: 'User logged out' });

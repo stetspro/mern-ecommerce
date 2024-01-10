@@ -28,27 +28,30 @@ export const getProducts = async (req, res) => {
 };
 
 export const getRealTimeProducts = async (req, res) => {
+    if(!req.isAuth) return res.redirect('/views/login');
+    if(req.role !== 'ADMIN_ROLE') return res.redirect('/views/products');
+
     const data = await productManager.getProducts();
 
     return res.render('realTimeProducts', { products: data.payload });
 };
 
 export const getCartById = async (req, res) => {
+    if (!req.isAuth) return res.redirect('/views/login');
+
     const data = await cartManager.getCartById(req.params.cid);
     
     return res.render('cart', { cart: data });
 };
 
 export const getLoginView = async (req, res) => {
-    const isAuth = req.user ? true : false;
-    if (isAuth) return res.redirect('/views/products');
+    if (req.isAuth) return res.redirect('/views/products');
     
     return res.render('login');
 };
 
 export const getRegisterView = async (req, res) => {
-    const isAuth = req.user ? true : false;
-    if (isAuth) return res.redirect('/views/products');
+    if (req.isAuth) return res.redirect('/views/products');
 
     return res.render('register');
 }
