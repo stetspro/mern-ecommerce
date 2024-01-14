@@ -9,7 +9,6 @@ const cartManager = new CartManager();
 
 export const getProducts = async (req, res) => {
     const { limit, page, sort, query } = req.query;
-    const isAuth = res.locals.user ? true : false;
     
     const data = await productManager.getProducts(limit, page, sort, query, '/views/');
 
@@ -20,39 +19,27 @@ export const getProducts = async (req, res) => {
         hasPrevPage: data.hasPrevPage, 
         hasNextPage: data.hasNextPage, 
         prevLink: data.prevLink, 
-        nextLink: data.nextLink ,
-        isAuth: isAuth,
-        username: res.locals.user ? res.locals.user.first_name : '',
-        cartId: res.locals.user ? res.locals.user.cart : ''
+        nextLink: data.nextLink 
     });
 };
 
 export const getRealTimeProducts = async (req, res) => {
-    if(!req.isAuth) return res.redirect('/views/login');
-    if(req.role !== 'ADMIN_ROLE') return res.redirect('/views/products');
-
     const data = await productManager.getProducts();
 
     return res.render('realTimeProducts', { products: data.payload });
 };
 
 export const getCartById = async (req, res) => {
-    if (!req.isAuth) return res.redirect('/views/login');
-
     const data = await cartManager.getCartById(req.params.cid);
     
     return res.render('cart', { cart: data });
 };
 
 export const getLoginView = async (req, res) => {
-    if (req.isAuth) return res.redirect('/views/products');
-    
     return res.render('login');
 };
 
 export const getRegisterView = async (req, res) => {
-    if (req.isAuth) return res.redirect('/views/products');
-
     return res.render('register');
 }
 

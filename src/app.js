@@ -6,20 +6,18 @@ import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import { __dirname } from './utils.js';
 import bcrypt, { compareSync } from 'bcrypt';
-import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
-import viewsRouter from './routes/views.router.js';
 import userRouter from './routes/user.router.js';
+import ViewRouter from './routes/views.router.js';
+import ProductRouter from './routes/products.router.js';
 import { ProductManager } from './dao/services/product.service.js';
 import { MessageManager } from './dao/services/message.service.js';
 import { CartManager } from './dao/services/cart.service.js';
-import { UserManager } from './dao/services/user.service.js';
 import { initializePassport } from './config/passport.config.js';
 
 const productManager = new ProductManager();
 const cartManager = new CartManager();
 const messageManager = new MessageManager();
-const userManager = new UserManager();
   
 export const app = express();
 app.engine("handlebars", handlebars.engine(
@@ -63,8 +61,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-app.use('/views/', viewsRouter);
-app.use('/api/products/', productsRouter);
+const viewRouter = new ViewRouter();
+const productRouter = new ProductRouter();
+
+app.use('/views/', viewRouter.getRouter());
+app.use('/api/products/', productRouter.getRouter());
 app.use('/api/carts/', cartsRouter);
 app.use('/api/users/', userRouter);
 
