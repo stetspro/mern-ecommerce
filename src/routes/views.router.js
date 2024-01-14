@@ -1,23 +1,15 @@
-import { Router } from "express";
+import Router from "./router.js";
 import { getHomeView, getLoginView, getProducts, getRealTimeProducts, getRegisterView, getCartById, getMessages } from "../dao/controllers/views.controller.js";
-import { passportAuthorization } from "../utils.js";
 
-const router = Router();
+export default class ViewRouter extends Router {
+    init() {
+        this.get("/", ['PUBLIC'], getHomeView);
+        this.get("/products", ['PUBLIC'], getProducts);
+        this.get("/realtimeproducts", ['ADMIN_ROLE'], getRealTimeProducts);
+        this.get("/cart/:cid", ['USER_ROLE', 'ADMIN_ROLE'], getCartById);
+        this.get("/login", ['PUBLIC'], getLoginView);
+        this.get("/register", ['PUBLIC'], getRegisterView);
+        this.get("/chat", ['USER_ROLE', 'ADMIN_ROLE'], getMessages);
 
-router.get("/", getHomeView);
-
-router.get("/products", getProducts);
-
-router.get("/realtimeproducts", passportAuthorization("jwt"), getRealTimeProducts);
-
-router.get("/cart/:cid", passportAuthorization("jwt"), getCartById);
-
-router.get("/login", passportAuthorization("jwt"), getLoginView);
-
-router.get("/register", passportAuthorization("jwt"), getRegisterView);
-
-router.get("/chat", getMessages)
-
-router.get("*", (req, res) => res.status(404).send("404 - Not Found!"));
-
-export default router;
+    }
+}

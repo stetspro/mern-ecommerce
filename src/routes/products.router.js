@@ -1,4 +1,4 @@
-import { Router } from "express";
+import Router from "./router.js";
 import { 
     addProduct, 
     deleteProduct, 
@@ -7,18 +7,12 @@ import {
     updateProduct 
 } from "../dao/controllers/product.controller.js";
 
-const router = Router();
-
-router.get("/", getProducts);
-
-router.get("/:pid", getProductById)
-
-router.post("/", addProduct);
-
-router.put("/:pid", updateProduct);
-
-router.delete("/:pid", deleteProduct);
-
-router.get("*", (req, res) => res.status(404).send("404 - Not Found!"));
-
-export default router;
+export default class ProductRouter extends Router {
+    init() {
+        this.get("/", ['PUBLIC'], getProducts);
+        this.get("/:pid", ['PUBLIC'], getProductById);
+        this.post("/", ['ADMIN_ROLE'], addProduct);
+        this.put("/:pid", ['ADMIN_ROLE'], updateProduct);
+        this.delete("/:pid", ['ADMIN_ROLE'], deleteProduct);
+    }
+}
