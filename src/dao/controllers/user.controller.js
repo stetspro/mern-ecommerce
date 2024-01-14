@@ -25,13 +25,13 @@ export const registerUser = async (req, res) => {
 
         const user = await userManager.registerUser(registerData); 
       
-        if(user) return res.status(201).json({ user: user.email });
+        if(user) return res.sendSuccess(user);
         
-        return res.status(400).json({ error: 'User could not be created' });
+        return res.sendUserError('User couldnt be registered');
     }
     catch (error) 
     {
-        return res.status(500).json({ error: error.message });
+        return res.sendServerError(error);
     }
     
 };
