@@ -6,8 +6,8 @@ import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import { __dirname } from './utils.js';
 import bcrypt, { compareSync } from 'bcrypt';
-import cartsRouter from './routes/carts.router.js';
-import userRouter from './routes/user.router.js';
+import UserRouter from './routes/user.router.js';
+import CartRouter from './routes/carts.router.js';
 import ViewRouter from './routes/views.router.js';
 import ProductRouter from './routes/products.router.js';
 import { ProductManager } from './dao/services/product.service.js';
@@ -63,11 +63,13 @@ app.use(express.static(__dirname + '/public'));
 
 const viewRouter = new ViewRouter();
 const productRouter = new ProductRouter();
+const userRouter = new UserRouter();
+const cartRouter = new CartRouter();
 
 app.use('/views/', viewRouter.getRouter());
 app.use('/api/products/', productRouter.getRouter());
-app.use('/api/carts/', cartsRouter);
-app.use('/api/users/', userRouter);
+app.use('/api/carts/', cartRouter.getRouter());
+app.use('/api/users/', userRouter.getRouter());
 
 const httpServer = app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
 const socketServer = new Server(httpServer);

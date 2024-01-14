@@ -1,4 +1,4 @@
-import { Router } from "express";
+import Router from "./router.js";
 import { 
     addNewProductToCart, 
     addProductInCart, 
@@ -9,22 +9,20 @@ import {
     updateCart 
 } from "../dao/controllers/cart.controller.js";
 
-const router = Router();
+export default class CartRouter extends Router {
+    init() {
+        this.post("/", ["USER_ROLE", "ADMIN_ROLE"], createCart);
 
-router.post("/", createCart);
+        this.get("/:cid", ["USER_ROLE", "ADMIN_ROLE"], getCartById);
 
-router.get("/:cid", getCartById);
+        this.put("/:cid", ["USER_ROLE", "ADMIN_ROLE"], updateCart);
 
-router.put("/:cid", updateCart);
+        this.delete("/:cid", ["USER_ROLE", "ADMIN_ROLE"], deleteCart);
 
-router.delete("/:cid", deleteCart);
+        this.put("/:cid/products/:pid", ["USER_ROLE", "ADMIN_ROLE"], addProductInCart);
 
-router.put("/:cid/products/:pid", addProductInCart);
+        this.post("/:cid/products/:pid", ["USER_ROLE", "ADMIN_ROLE"], addNewProductToCart);
 
-router.post("/:cid/products/:pid", addNewProductToCart);
-
-router.delete("/:cid/products/:pid", deleteProductFromCart);
-
-router.get("*", (req, res) => res.status(404).send("404 - Not Found!"));
-
-export default router;
+        this.delete("/:cid/products/:pid", ["USER_ROLE", "ADMIN_ROLE"], deleteProductFromCart);
+    }
+}
