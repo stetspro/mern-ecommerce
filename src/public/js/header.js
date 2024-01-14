@@ -43,7 +43,6 @@ const initializeHeader = async () => {
     }
 
     if(user) {
-        console.log(user)
         const hiddenElements = document.querySelectorAll('.hidden');
         hiddenElements.forEach(element => {
             element.classList.remove('hidden');
@@ -53,6 +52,12 @@ const initializeHeader = async () => {
 
         if(user.cart) {
             document.getElementById('cartRoute').href = `/views/cart/${user.cart}`;
+        }
+
+        if(user.role == 'ADMIN_ROLE') {
+            document.querySelectorAll('.admin-only').forEach(element => {
+                element.classList.remove('admin-only');
+            });
         }
     }
 }

@@ -71,6 +71,10 @@ app.use('/api/products/', productRouter.getRouter());
 app.use('/api/carts/', cartRouter.getRouter());
 app.use('/api/users/', userRouter.getRouter());
 
+app.get('/', (req, res) => {
+    res.redirect('/views/products');
+});
+
 const httpServer = app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
 const socketServer = new Server(httpServer);
 
