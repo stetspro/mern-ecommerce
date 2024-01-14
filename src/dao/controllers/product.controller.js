@@ -8,7 +8,7 @@ export const getProducts = async (req, res) => {
 
     const products = await productManager.getProducts(limit, page, sort, query, baseUrl);
     
-    return res.json({ products });
+    return res.sendSuccess(products);
 };
 
 export const getProductById = async (req, res) => {
@@ -16,13 +16,13 @@ export const getProductById = async (req, res) => {
 
     try {
         const product = await productManager.getProductById(pid);
-        return res.json({ product });
+        return res.sendSuccess(product);
     }
     catch(error) {
         if (error instanceof ProductNotFoundError) {
-            res.status(404).json({ error: error.message });
+            res.sendNotFound(error.message);
         } else {
-            res.status(500).json({error: "Internal server error: " + error.message });
+            res.sendServerError(error);
         }
     }
     

@@ -73,6 +73,7 @@ export default class AppRouter {
     res.sendUserError = error => res.status(400).json({ status: 'error', error })
     res.sendNoAuthenticatedError = (error = 'No auth') => res.status(401).json({ status: 'error', error })
     res.sendNoAuthorizadError = (error = 'No authorized') => res.status(403).json({ status: 'error', error })
+    res.sendNotFound = (error = 'Not found') => res.status(404).json({ status: 'error', error })
 
     next()
   }

@@ -1,6 +1,5 @@
 import { ProductManager, ProductNotFoundError }  from '../services/product.service.js';
 import { CartManager } from '../services/cart.service.js';
-import { UserManager } from '../services/user.service.js';
 import { MessageManager } from "../services/message.service.js";
 
 const messageManager = new MessageManager();
