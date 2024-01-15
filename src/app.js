@@ -96,17 +96,17 @@ socketServer.on('connection', async socket => {
     });
 
     // <--- Real time products sockets --->
-    socket.emit('products', await productManager.getProducts());
+    socket.emit('products', await productManager.getProducts(40));
 
     socket.on("onaddproduct", async product => {
         await productManager.addProduct(product);
-        const data = await productManager.getProducts();
+        const data = await productManager.getProducts(40);
         socketServer.sockets.emit('products', data);
     });
 
     socket.on("ondeleteproduct", async pid => {
         await productManager.deleteProduct(pid);
-        const data = await productManager.getProducts();
+        const data = await productManager.getProducts(40);
         socketServer.sockets.emit('products', data);  
     });
 
