@@ -23,7 +23,7 @@ export const getProducts = async (req, res) => {
 };
 
 export const getRealTimeProducts = async (req, res) => {
-    const data = await productManager.getProducts();
+    const data = await productManager.getProducts(40);
 
     return res.render('realTimeProducts', { products: data.payload });
 };
