@@ -5,7 +5,7 @@ import {
     loginUser, 
     logoutUser, 
     registerUser 
-} from "../dao/controllers/user.controller.js";
+} from "../controllers/user.controller.js";
 import passport from "passport";
 import { passportCall } from "../utils.js";
 

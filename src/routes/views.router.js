@@ -1,5 +1,5 @@
 import Router from "./router.js";
-import { getHomeView, getLoginView, getProducts, getRealTimeProducts, getRegisterView, getCartById, getMessages } from "../dao/controllers/views.controller.js";
+import { getHomeView, getLoginView, getProducts, getRealTimeProducts, getRegisterView, getCartById, getMessages } from "../controllers/views.controller.js";
 
 export default class ViewRouter extends Router {
     init() {

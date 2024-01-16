@@ -10,9 +10,9 @@ import UserRouter from './routes/user.router.js';
 import CartRouter from './routes/carts.router.js';
 import ViewRouter from './routes/views.router.js';
 import ProductRouter from './routes/products.router.js';
-import { ProductManager } from './dao/services/product.service.js';
-import { MessageManager } from './dao/services/message.service.js';
-import { CartManager } from './dao/services/cart.service.js';
+import { ProductManager } from './services/product.service.js';
+import { MessageManager } from './services/message.service.js';
+import { CartManager } from './services/cart.service.js';
 import { initializePassport } from './config/passport.config.js';
 
 const productManager = new ProductManager();
