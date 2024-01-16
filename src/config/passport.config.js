@@ -1,5 +1,5 @@
 import passport from "passport";
-import { UserManager } from "../services/user.service.js";
+import { UserService } from "../services/index.js";
 import GitHubStrategy from "passport-github2";
 import { createHash, compareHash } from "../app.js";
 import local from 'passport-local';
@@ -11,8 +11,6 @@ const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;
 
 export const initializePassport = async () => {
-    const userManager = new UserManager();
-    
     passport.use('github',
         new GitHubStrategy(
             {
@@ -23,7 +21,7 @@ export const initializePassport = async () => {
             },
             async (accessToken, refreshToken, profile, done) => {
                 const email = profile._json.email || profile.emails[0].value;
-                const user = await userManager.getUserByEmail(email);
+                const user = await UserService.getUserByEmail(email);
         
                 if (user) {
                     return done(null, user);
@@ -36,7 +34,7 @@ export const initializePassport = async () => {
                     password: ''
                 };
         
-                await userManager.registerUser(newUser);
+                await UserService.registerUser(newUser);
         
                 return done(null, newUser);
             }
@@ -50,7 +48,7 @@ export const initializePassport = async () => {
 
         const { name, email } = req.body
         try {
-            const user = await userManager.getUserByEmail(username);
+            const user = await UserService.getUserByEmail(username);
             if (user) {
                 console.log('User already exits');
                 return done(null, false)
@@ -62,7 +60,7 @@ export const initializePassport = async () => {
                 password: createHash(password)
             }
 
-            const result = await userManager.registerUser(newUser);
+            const result = await UserService.registerUser(newUser);
             return done(null, result);
         } catch (error) {
             done('Error to register ' + error)
@@ -73,7 +71,7 @@ export const initializePassport = async () => {
         { usernameField: 'email' },
         async(username, password, done) => {
             try {
-                const user = await userManager.getUserByEmail(username);
+                const user = await UserService.getUserByEmail(username);
 
                 if(!user) {
                     console.error('user doesnt exist');
@@ -109,7 +107,7 @@ export const initializePassport = async () => {
     });
     
     passport.deserializeUser(async (email, done) => {
-        const user = await userManager.getUserByEmail(email);
+        const user = await UserService.getUserByEmail(email);
     
         done(null, user);
     });

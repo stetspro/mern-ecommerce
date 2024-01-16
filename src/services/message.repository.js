@@ -1,8 +1,6 @@
-import { messageModel } from '../dao/mongo/models/message.model.js';
-
-export class MessageManager {
-    constructor() {
-        this.messageModel = new messageModel();
+export default class MessageRepository {
+    constructor(dao) {
+        this.dao = dao;
     }
 
     saveMessage = async ({ user, message }) => {
@@ -16,7 +14,7 @@ export class MessageManager {
                 message
             };
     
-            const res = await messageModel.create(messageDoc);
+            const res = await this.dao.createMessage(messageDoc);
 
             return res._id;
         }
@@ -27,8 +25,7 @@ export class MessageManager {
 
     getAllMessages = async () => {
         try {
-            const messages = await messageModel.find({}).lean();
-            return messages;
+            return await this.dao.getMessages();
         }
         catch(error) {
             throw new Error('Error while getting messages: ' + error.message);

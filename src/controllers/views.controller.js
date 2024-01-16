@@ -1,15 +1,9 @@
-import { ProductManager, ProductNotFoundError }  from '../services/product.service.js';
-import { CartManager } from '../services/cart.service.js';
-import { MessageManager } from "../services/message.service.js";
-
-const messageManager = new MessageManager();
-const productManager = new ProductManager();
-const cartManager = new CartManager();
+import { CartService, MessageService, ProductService } from '../services/index.js';
 
 export const getProducts = async (req, res) => {
     const { limit, page, sort, query } = req.query;
     
-    const data = await productManager.getProducts(limit, page, sort, query, '/views/');
+    const data = await ProductService.getProducts(limit, page, sort, query, '/views/');
 
     return res.render('productList', { 
         products: data.payload, 
@@ -23,13 +17,13 @@ export const getProducts = async (req, res) => {
 };
 
 export const getRealTimeProducts = async (req, res) => {
-    const data = await productManager.getProducts(40);
+    const data = await ProductService.getProducts(40);
 
     return res.render('realTimeProducts', { products: data.payload });
 };
 
 export const getCartById = async (req, res) => {
-    const data = await cartManager.getCartById(req.params.cid);
+    const data = await CartService.getCartById(req.params.cid);
     
     return res.render('cart', { cart: data });
 };
@@ -47,6 +41,6 @@ export const getHomeView = async (req, res) => {
 };
 
 export const getMessages = async (req, res) => {
-    const messages = await messageManager.getAllMessages();
+    const messages = await MessageService.getAllMessages();
     res.render("chat", { messages });
 };

@@ -1,13 +1,12 @@
-import { userModel } from "../dao/mongo/models/user.model.js";
 
-export class UserManager {
-    constructor() {
-        this.userModel = new userModel();
+export default class UserRepository {
+    constructor(dao) {
+        this.dao = dao;
     }
 
     getUserByEmail = async (email) => {
         try {
-            return await userModel.findOne({ email });
+            return await this.dao.getUserByEmail(email);
         }
         catch (error) {
             console.log(error);
@@ -17,7 +16,7 @@ export class UserManager {
 
     getUserById = async (id) => {
         try {
-            return await userModel.findById(id);
+            return await this.dao.getUserById(id);
         }
         catch (error) {
             console.log(error);
@@ -27,7 +26,8 @@ export class UserManager {
     
     registerUser = async (user) => {
         try {
-            return await userModel.create({ ...user });
+            console.log(user)
+            return await this.dao.createUser(user);
         }
         catch (error) {
             console.log(error);

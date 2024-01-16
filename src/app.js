@@ -10,14 +10,8 @@ import UserRouter from './routes/user.router.js';
 import CartRouter from './routes/carts.router.js';
 import ViewRouter from './routes/views.router.js';
 import ProductRouter from './routes/products.router.js';
-import { ProductManager } from './services/product.service.js';
-import { MessageManager } from './services/message.service.js';
-import { CartManager } from './services/cart.service.js';
+import { ProductService, CartService, MessageService } from './services/index.js';
 import { initializePassport } from './config/passport.config.js';
-
-const productManager = new ProductManager();
-const cartManager = new CartManager();
-const messageManager = new MessageManager();
   
 export const app = express();
 app.engine("handlebars", handlebars.engine(
@@ -92,30 +86,30 @@ socketServer.on('connection', async socket => {
 
     // <--- Product List sockets --->
     socket.on("onaddtocart", async (data) => {
-        await cartManager.addProductToCart(data.cid, data.pid);
+        await CartService.addProductToCart(data.cid, data.pid);
     });
 
     // <--- Real time products sockets --->
-    socket.emit('products', await productManager.getProducts(40));
+    socket.emit('products', await ProductService.getProducts(40));
 
     socket.on("onaddproduct", async product => {
-        await productManager.addProduct(product);
-        const data = await productManager.getProducts(40);
+        await ProductService.addProduct(product);
+        const data = await ProductService.getProducts(40);
         socketServer.sockets.emit('products', data);
     });
 
     socket.on("ondeleteproduct", async pid => {
-        await productManager.deleteProduct(pid);
-        const data = await productManager.getProducts(40);
+        await ProductService.deleteProduct(pid);
+        const data = await ProductService.getProducts(40);
         socketServer.sockets.emit('products', data);  
     });
 
     // <--- Chat sockets --->
-    socket.emit('messages', await messageManager.getAllMessages());
+    socket.emit('messages', await MessageService.getAllMessages());
 
     socket.on('new-message', async (message) => {
-        await messageManager.saveMessage(message);
-        let messages = await messageManager.getAllMessages();
+        await MessageService.saveMessage(message);
+        let messages = await MessageService.getAllMessages();
         socketServer.sockets.emit('messages', messages);
     });
 });

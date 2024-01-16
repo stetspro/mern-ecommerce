@@ -1,10 +1,6 @@
-import { createHash } from "../app.js";
-import { UserManager } from "../services/user.service.js";
-import { CartManager } from "../services/cart.service.js";
+import { UserService, CartService } from "../services/index.js";
 import { generateToken } from "../utils.js";
-
-const userManager = new UserManager();
-const cartManager = new CartManager();
+import { createHash } from "../app.js";
 
 export const registerUser = async (req, res) => {
     const { password, confirmPassword } = req.body;
@@ -20,10 +16,10 @@ export const registerUser = async (req, res) => {
             last_name: req.body.lastName,
             email: req.body.email,
             password: passwordHashed,
-            cart: await cartManager.createCart()
+            cart: await CartService.createCart()
         }
 
-        const user = await userManager.registerUser(registerData); 
+        const user = await UserService.registerUser(registerData); 
       
         if(user) return res.sendSuccess(user);
         
@@ -31,6 +27,7 @@ export const registerUser = async (req, res) => {
     }
     catch (error) 
     {
+        console.log("Error: ", error)
         return res.sendServerError(error);
     }
     
@@ -87,7 +84,7 @@ export const logoutUser = async (req, res) => {
 export const getCurrentUser = async (req, res) => {
     if(!req.user) return res.status(401).json({ message: "Unauthorized" });
     
-    const { cart, role, first_name, email } = await userManager.getUserByEmail(req.user.email);
+    const { cart, role, first_name, email } = await UserService.getUserByEmail(req.user.email);
 
     const user = {
         cart,

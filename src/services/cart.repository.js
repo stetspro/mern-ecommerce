@@ -1,6 +1,3 @@
-import { cartModel } from '../dao/mongo/models/cart.model.js';
-import { productModel } from '../dao/mongo/models/product.model.js';
-
 export class CartNotFoundError extends Error {
     constructor(message) {
         super(message);
@@ -15,9 +12,9 @@ export class FileError extends Error {
     }
 }
 
-export class CartManager {
-    constructor() {
-        this.cartModel = new cartModel();
+export default class CartRepository {
+    constructor(dao) {
+        this.dao = dao;
     }
 
     createCart = async () => {
@@ -26,7 +23,7 @@ export class CartManager {
                 products: []
             };
 
-            const res = await cartModel.create(cart);
+            const res = await this.dao.createCart(cart);
 
             return res;
         }
@@ -38,8 +35,7 @@ export class CartManager {
 
     getCartById = async (id) => {
         try {
-            const cart = await cartModel.findById(id).populate({ path: 'products.id', model: productModel}).lean();
-            
+            const cart = await this.dao.getCartById(id);
             return cart;
         }
         catch(error) {
@@ -47,29 +43,20 @@ export class CartManager {
         }
     };
 
-    getCarts = async () => {
-        try {
-            const carts = await cartModel.find({}).lean();
-            return carts;
-        }
-        catch(error) {
-            throw new FileError('Error while getting carts: ' + error.message);
-        };
-    };
-
     addProductToCart = async (cid, pid, quantity) => {
         try {
-            const isProductInCart = await cartModel.findOne({ _id: cid, 'products.id': pid }).lean();
+            const isProductInCart = await this.dao.getProductById(cid, pid);
             let res;
 
             if(isProductInCart !== null) {
-                const query = { _id: cid, 'products.id': pid };
-                const update = { $inc: { 'products.$.quantity': quantity ? quantity : 1 } };
-                const options = { new: true, upsert: true };
-
-                res = await cartModel.findOneAndUpdate(query, update, options);
+                res = await this.dao.updateProductQuantity(cid, pid, quantity || 1);
             } else {
-                res = this.addNewProductToCart(cid, pid);
+                const newProduct = {
+                    id: pid,
+                    quantity: 1
+                };
+
+                res = await this.dao.addProductToCart(cid, newProduct);
             }
     
             return res;
@@ -78,36 +65,9 @@ export class CartManager {
         }
     };
 
-    addNewProductToCart = async (cid, pid) => {
-        try {
-            const newProduct = {
-                id: pid,
-                quantity: 1
-            };
-    
-            const update = {
-                $push: { products: newProduct }
-            };
-    
-            const options = { new: true };
-    
-            const updatedCart = await cartModel.findByIdAndUpdate(cid, update, options).lean();
-    
-            return updatedCart;
-        } catch (error) {
-            console.error(error.message);
-        }
-    };
-
     deleteProductFromCart = async (cid, pid) => {
         try {
-            const update = {
-                $pull: { products: { id: pid } }
-            };
-    
-            const options = { new: true };
-    
-            const updatedCart = await cartModel.findByIdAndUpdate(cid, update, options).lean();
+            const updatedCart = await this.dao.deleteProductFromCart(cid, pid);
     
             if (!updatedCart) {
                 throw new Error("Product not found in cart");
@@ -121,11 +81,7 @@ export class CartManager {
 
     updateCart = async (cid, products) => {
         try {
-            const query = { _id: cid };
-            const update = { products: products };
-            const options = { new: true };
-    
-            const updatedCart = await cartModel.findOneAndUpdate(query, update, options).lean();
+            const updatedCart = await this.dao.updateCart(cid, products);
     
             if (!updatedCart) {
                 throw new CartNotFoundError("A cart with that ID does not exist.");
@@ -139,7 +95,7 @@ export class CartManager {
 
     deleteCart = async (cid) => {
         try {
-            const res = this.updateCart(cid, []);
+            const res = this.dao.deleteCart(cid);
 
             return res;
         } catch (error) {
