@@ -1,5 +1,3 @@
-import { productModel } from '../dao/mongo/models/product.model.js';
-
 export class ProductNotFoundError extends Error {
     constructor(message) {
         super(message);
@@ -14,13 +12,13 @@ export class FileError extends Error {
     }
 }
 
-export class ProductManager {
-    constructor() {
-        this.productModel = new productModel();
+export default class ProductRepository {
+    constructor(dao) {
+        this.dao = dao;
     }
 
     #isUniqueCode = async (code) => {
-        const product = await productModel.find({ code });
+        const product = await this.dao.getProductByCode(code);
         return product.length === 0;
     }
 
@@ -47,7 +45,7 @@ export class ProductManager {
                 category
             };
     
-            const res = await productModel.create(product);
+            const res = await this.dao.createProduct(product);
 
             return res._id;
         }
@@ -57,7 +55,7 @@ export class ProductManager {
     }
 
     getProductById = async (id) => {
-        const product = await productModel.findById(id).lean();
+        const product = await this.dao.getProductById(id);
 
         if (!product) {
             throw new ProductNotFoundError("Product with that ID not found");
@@ -80,7 +78,7 @@ export class ProductManager {
                 query = JSON.parse(query.toLowerCase());
             }
             
-            const data = await productModel.paginate(query, options);
+            const data = await this.dao.getProducts(query, options);
             
             const response = {
                 status: 'success',
@@ -104,7 +102,7 @@ export class ProductManager {
 
     updateProduct = async (id, obj) => {
         try {
-            const res = await  productModel.findByIdAndUpdate(id, obj, { new: true }).lean();
+            const res = await this.dao.updateProduct(id, obj);
             return res._id;
         }
         catch (err) {
@@ -114,8 +112,7 @@ export class ProductManager {
 
     deleteProduct = async (id) => {
         try {
-            const res = await productModel.findByIdAndDelete(id).lean();
-            
+            const res = await this.dao.deleteProduct(id);
             return res._id;
         }
         catch (err) {

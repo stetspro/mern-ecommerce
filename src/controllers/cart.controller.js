@@ -1,11 +1,8 @@
-import { CartManager, CartNotFoundError } from '../services/cart.service.js';
-
-const cartManager = new CartManager();
+import { CartService } from "../services/index.js";
 
 export const createCart = async (req, res) => {
-    const data = req.body;
     try {
-        const result = await cartManager.createCart(data);
+        const result = await CartService.createCart();
         return res.sendSuccess(result);
     }
     catch(error) {
@@ -18,7 +15,7 @@ export const getCartById = async (req, res) => {
     const cid = req.params.cid;
 
     try {
-        const result = await cartManager.getCartById(cid);
+        const result = await CartService.getCartById(cid);
         return res.sendSuccess(result);
     }
     catch(error) {
@@ -34,7 +31,7 @@ export const updateCart = async (req, res) => {
     const cid = req.params.cid;
 
     try {
-        const result = await cartManager.updateCart(cid, req.body);
+        const result = await CartService.updateCart(cid, req.body);
         return res.sendSuccess(result);
     }
     catch(error) {
@@ -50,7 +47,7 @@ export const deleteCart = async (req, res) => {
     const cid = req.params.cid;
 
     try {
-        const result = await cartManager.deleteCart(cid);
+        const result = await CartService.deleteCart(cid);
         return res.sendSuccess(result);
     }
     catch(error) {
@@ -72,7 +69,7 @@ export const addProductInCart = async (req, res) => {
             throw new Error("Quantity is required and must be a integer");
         }
 
-        const result = await cartManager.addProductInCart(cid, pid, quantity);
+        const result = await CartService.addProductToCart(cid, pid, quantity);
         return res.sendSuccess(result);
     }
     catch(error) {
@@ -89,7 +86,7 @@ export const addNewProductToCart = async (req, res) => {
     const pid = req.params.pid;
 
     try {
-        const result = await cartManager.addNewProductToCart(cid, pid);
+        const result = await CartService.addProductToCart(cid, pid);
         return res.sendSuccess(result);
     }
     catch(error) {
@@ -106,7 +103,7 @@ export const deleteProductFromCart = async (req, res) => {
     const pid = req.params.pid;
 
     try {
-        const result = await cartManager.deleteProductFromCart(cid, pid);
+        const result = await CartService.deleteProductFromCart(cid, pid);
         return res.sendSuccess(result);
     }
     catch(error) {

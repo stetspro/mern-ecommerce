@@ -12,4 +12,4 @@ const messageSchema = new mongoose.Schema(
     }
 );
 
-export const messageModel = dbConnection.model(messageCollection, messageSchema);
+export const MessageModel = dbConnection.model(messageCollection, messageSchema);

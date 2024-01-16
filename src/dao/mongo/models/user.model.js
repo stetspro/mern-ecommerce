@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import 'dotenv/config';
-import { cartModel } from './cart.model.js';
+import { CartModel } from './cart.model.js';
 
 const dbConnection = mongoose.createConnection(process.env.MONGO_URI_ECOMMERCE);
 
@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema(
         role: { type: String, default: "USER_ROLE", enum: ["ADMIN_ROLE", "USER_ROLE"] },
         status: { type: Boolean, default: true },
         creationDate: { type: Date, default: Date.now },
-        cart: { type: mongoose.Schema.Types.ObjectId, ref: cartModel },
+        cart: { type: mongoose.Schema.Types.ObjectId, ref: CartModel },
         age: { type: Number, min: 18, max: 65 }
     }
 );
@@ -27,4 +27,4 @@ userSchema.set('toJSON', {
     }
 });
 
-export const userModel = dbConnection.model(userCollection, userSchema);
+export const UserModel = dbConnection.model(userCollection, userSchema);

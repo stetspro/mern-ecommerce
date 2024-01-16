@@ -32,4 +32,4 @@ CartSchema.set('toJSON', {
     }
 });
 
-export const cartModel = dbConnection.model(cartCollection, CartSchema);
+export const CartModel = dbConnection.model(cartCollection, CartSchema);

@@ -19,4 +19,4 @@ const productSchema = new mongoose.Schema({
 
 productSchema.plugin(mongoosePaginate);
 
-export const productModel = dbConnection.model(productCollection, productSchema);
+export const ProductModel = dbConnection.model(productCollection, productSchema);

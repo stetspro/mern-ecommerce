@@ -68,7 +68,7 @@ export default class AppRouter {
   }
 
   generateCustomResponse = (req, res, next) => {
-    res.sendSucess = payload => res.json({ status: 'success', payload })
+    res.sendSuccess = payload => res.json({ status: 'success', payload })
     res.sendServerError = error => res.status(500).json({ status: 'error', error })
     res.sendUserError = error => res.status(400).json({ status: 'error', error })
     res.sendNoAuthenticatedError = (error = 'No auth') => res.status(401).json({ status: 'error', error })
