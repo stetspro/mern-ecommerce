@@ -1,4 +1,4 @@
-import { userModel } from "../models/user.model.js";
+import { userModel } from "../dao/mongo/models/user.model.js";
 
 export class UserManager {
     constructor() {

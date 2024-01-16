@@ -1,7 +1,7 @@
-import { createHash } from "../../app.js";
+import { createHash } from "../app.js";
 import { UserManager } from "../services/user.service.js";
 import { CartManager } from "../services/cart.service.js";
-import { generateToken } from "../../utils.js";
+import { generateToken } from "../utils.js";
 
 const userManager = new UserManager();
 const cartManager = new CartManager();

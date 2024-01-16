@@ -1,5 +1,5 @@
 import passport from "passport";
-import { UserManager } from "../dao/services/user.service.js";
+import { UserManager } from "../services/user.service.js";
 import GitHubStrategy from "passport-github2";
 import { createHash, compareHash } from "../app.js";
 import local from 'passport-local';

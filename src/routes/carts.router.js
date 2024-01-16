@@ -7,7 +7,7 @@ import {
     deleteProductFromCart, 
     getCartById, 
     updateCart 
-} from "../dao/controllers/cart.controller.js";
+} from "../controllers/cart.controller.js";
 
 export default class CartRouter extends Router {
     init() {

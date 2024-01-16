@@ -5,7 +5,7 @@ import {
     getProductById, 
     getProducts, 
     updateProduct 
-} from "../dao/controllers/product.controller.js";
+} from "../controllers/product.controller.js";
 
 export default class ProductRouter extends Router {
     init() {

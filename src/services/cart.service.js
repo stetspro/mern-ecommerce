@@ -1,5 +1,5 @@
-import { cartModel } from '../models/cart.model.js';
-import { productModel } from '../models/product.model.js';
+import { cartModel } from '../dao/mongo/models/cart.model.js';
+import { productModel } from '../dao/mongo/models/product.model.js';
 
 export class CartNotFoundError extends Error {
     constructor(message) {

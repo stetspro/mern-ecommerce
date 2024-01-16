@@ -1,4 +1,4 @@
-import { productModel } from '../models/product.model.js';
+import { productModel } from '../dao/mongo/models/product.model.js';
 
 export class ProductNotFoundError extends Error {
     constructor(message) {

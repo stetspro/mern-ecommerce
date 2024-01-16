@@ -1,4 +1,4 @@
-import { messageModel } from '../models/message.model.js';
+import { messageModel } from '../dao/mongo/models/message.model.js';
 
 export class MessageManager {
     constructor() {
