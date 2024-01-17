@@ -1,7 +1,7 @@
 import passport from "passport";
 import { UserService } from "../services/index.js";
 import GitHubStrategy from "passport-github2";
-import { createHash, compareHash } from "../app.js";
+import { createHash, compareHash } from "../utils.js"
 import local from 'passport-local';
 import jwt from 'passport-jwt';
 import 'dotenv/config';

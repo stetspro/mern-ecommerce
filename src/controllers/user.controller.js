@@ -1,6 +1,6 @@
 import { UserService, CartService } from "../services/index.js";
 import { generateToken } from "../utils.js";
-import { createHash } from "../app.js";
+import { createHash } from "../utils.js"
 
 export const registerUser = async (req, res) => {
     const { password, confirmPassword } = req.body;

@@ -72,13 +72,6 @@ app.get('/', (req, res) => {
 const httpServer = app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
 const socketServer = new Server(httpServer);
 
-export const createHash = async (password) => {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-}
-
-export const compareHash = async (password, hash) => {
-    return bcrypt.compareSync(password, hash);
-}
 // <--- Socket Connection --->
 
 socketServer.on('connection', async socket => {

@@ -47,3 +47,11 @@ export const passportCall = (strategy, failureRedirect = "") => {
         })(req, res, next);
     }
 }
+
+export const createHash = async (password) => {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+}
+
+export const compareHash = async (password, hash) => {
+    return bcrypt.compareSync(password, hash);
+}
