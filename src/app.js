@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import { __dirname } from './utils.js';
-import bcrypt, { compareSync } from 'bcrypt';
 import UserRouter from './routes/user.router.js';
 import CartRouter from './routes/carts.router.js';
 import ViewRouter from './routes/views.router.js';

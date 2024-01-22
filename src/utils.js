@@ -2,6 +2,7 @@ import multer from 'multer';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import passport from 'passport';
+import bcrypt from 'bcrypt';
 
 const storage = multer.diskStorage({
     //Carpeta donde se guarda el archivo
