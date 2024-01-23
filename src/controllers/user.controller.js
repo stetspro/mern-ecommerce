@@ -3,6 +3,7 @@ import { generateToken } from "../utils.js";
 import { createHash } from "../utils.js";
 import nodemailer from "../config/nodemailer.config.js";
 import twilio from "../config/twilio.config.js";
+import CurrentUserDTO from "../DTO/currentUser.dto.js";
 
 export const registerUser = async (req, res) => {
     const { password, confirmPassword } = req.body;
@@ -88,14 +89,9 @@ export const logoutUser = async (req, res) => {
 export const getCurrentUser = async (req, res) => {
     if(!req.user) return res.status(401).json({ message: "Unauthorized" });
     
-    const { cart, role, first_name, email } = await UserService.getUserByEmail(req.user.email);
+    let user = await UserService.getUserByEmail(req.user.email);
+    user = new CurrentUserDTO(user);
 
-    const user = {
-        cart,
-        role,
-        first_name,
-        email
-    }
 
     res.status(200).json(user);
 }

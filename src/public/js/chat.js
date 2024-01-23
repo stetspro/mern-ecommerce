@@ -31,7 +31,7 @@ const initializeChat = async () => {
 
     if(!user) {
         user = await getCurrentUser();
-        if(user) sessionStorage["user"] = JSON.stringify(user);
+        if(user && !user.message) sessionStorage["user"] = JSON.stringify(user);
     }
 
     if(user && user.email) {
