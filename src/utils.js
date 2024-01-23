@@ -34,12 +34,16 @@ export const generateToken = (user) => {
     return token;
 }
 
-export const passportCall = (strategy, failureRedirect = "") => {
+export const passportCall = (strategy, roles = []) => {
     return async (req, res, next) => {
-        passport.authenticate(strategy, { session: false, failureRedirect }, function(err, user, info) {
+        passport.authenticate(strategy, { session: false }, function(err, user, info) {
             if (err) return next(err); 
             if (!user) { 
                 return res.status(401).json({ error: info?.messages ? info?.messages : info?.toString() }); 
+            }
+
+            if (roles.length && !roles.includes(user.role)) {
+                return res.sendNoAuthorizedError();
             }
 
             req.user = user;

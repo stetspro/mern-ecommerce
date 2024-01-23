@@ -1,6 +1,7 @@
 import { Router } from "express";
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
+import { passportCall } from "../utils.js";
 
 export default class AppRouter {
 
@@ -82,21 +83,10 @@ export default class AppRouter {
     if(policies.includes('PUBLIC')) return next()
 
     if(policies.length > 0) {
-      const token = req.cookies['access_token']
-
-      if(!token) return res.sendNoAuthenticatedError('No token')
-
-      const user = jwt.verify(token, process.env.JWT_SECRET)
-
-      if( !policies.includes(user.role.toUpperCase())) {
-        return res.sendNoAuthorizadError()
-      }
-
-      req.user = user
-      return next()
+      passportCall('jwt', policies)(req, res, next)
+    } else {
+      return res.sendNoAuthenticatedError('This resource is private ')
     }
-
-    return res.sendNoAuthenticatedError('This resource is private ')
   }
 
 }

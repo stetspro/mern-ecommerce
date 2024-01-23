@@ -39,10 +39,10 @@ const initializeHeader = async () => {
    
     if (!user) {
         user = await getCurrentUser();
-        if(user) sessionStorage["user"] = JSON.stringify(user);
+        if(user && !user.message) sessionStorage["user"] = JSON.stringify(user);
     }
 
-    if(user) {
+    if(user && !user.message) {
         const hiddenElements = document.querySelectorAll('.hidden');
         hiddenElements.forEach(element => {
             element.classList.remove('hidden');
