@@ -32,8 +32,12 @@ app.engine("handlebars", handlebars.engine(
             getCartSubtotal: function (products) {
                 let subtotal = 0;
 
+                if (!products) {
+                    return subtotal;
+                }
+
                 products.forEach(product => {
-                    subtotal += product.id.price * product.quantity;
+                    subtotal += product?.id?.price * product?.quantity;
                 });
 
                 return subtotal;

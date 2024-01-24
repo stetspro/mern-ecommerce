@@ -114,3 +114,26 @@ export const deleteProductFromCart = async (req, res) => {
         }
     }
 };
+
+export const purchaseCart = async (req, res) => {
+    const cid = req.params.cid;
+    const userEmail = req.user.email;
+
+    try {
+        if(!userEmail) {
+            return res.sendBadRequest("User email is required");
+        }
+
+        if(!cid) {
+            return res.sendBadRequest("Cart ID is required");
+        }
+
+        const result = await CartService.purchaseCart(cid, userEmail);
+        return res.sendSuccess(result);
+    }
+    catch(error) {
+        console.error(error.message);
+        res.sendServerError(error);
+    }
+    
+}
