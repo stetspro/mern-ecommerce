@@ -6,7 +6,8 @@ import {
     deleteCart, 
     deleteProductFromCart, 
     getCartById, 
-    updateCart 
+    updateCart,
+    purchaseCart 
 } from "../controllers/cart.controller.js";
 
 export default class CartRouter extends Router {
@@ -24,5 +25,7 @@ export default class CartRouter extends Router {
         this.post("/:cid/products/:pid", ["USER_ROLE"], addNewProductToCart);
 
         this.delete("/:cid/products/:pid", ["USER_ROLE"], deleteProductFromCart);
+
+        this.post("/:cid/purchase", ["USER_ROLE"], purchaseCart)
     }
 }

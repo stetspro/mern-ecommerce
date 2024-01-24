@@ -120,4 +120,16 @@ export default class ProductRepository {
         }
         
     };   
+
+    updateProductStock = async (id, quantity) => {
+        try {
+            console.log(id, quantity);
+            const res = await this.dao.updateProductStock(id, quantity);
+            return res._id;
+        }
+        catch (err) {
+            console.log(err.message);
+            throw new Error('Error while updating product stock: ' + err.message);
+        }
+    }
 }

@@ -28,4 +28,8 @@ export default class Product {
     async deleteProduct(id) {
         return await this.productModel.findByIdAndDelete(id).lean();
     }
+
+    async updateProductStock(id, quantity) {
+        return await this.productModel.findByIdAndUpdate(id, { $inc: { stock: quantity } }, { new: true }).lean();
+    }
 }

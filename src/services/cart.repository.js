@@ -1,3 +1,5 @@
+import { ProductService, TicketService } from "./index.js";
+
 export class CartNotFoundError extends Error {
     constructor(message) {
         super(message);
@@ -116,6 +118,67 @@ export default class CartRepository {
             return subtotal;
         } catch (error) {
             throw new FileError('Error getting cart subtotal: ' + error.message);
+        }
+    }
+
+    purchaseCart = async (cid, userEmail) => {
+        let productsOutOfStock = [];
+        let productsPurchased = [];
+        let amount = 0;
+
+        try {
+            const cart = await this.getCartById(cid);
+            const products = cart.products;
+            
+            for (const product of products) {
+                const pid = product.id._id;
+                const quantity = product.quantity;
+                const hasStock = await this.validateProductStock(pid, quantity);
+
+                if (hasStock) {
+                    console.log(`Product ${pid} has sufficient stock`);
+                    await ProductService.updateProductStock(pid, -quantity);
+                    productsPurchased.push({ id: pid, quantity: quantity });
+                    amount += product.id.price * product.quantity;
+                } else {
+                    productsOutOfStock.push({ id: pid, quantity: quantity });
+                }
+            }
+
+        } catch (error) {
+            throw new Error('Error purchasing cart: ' + error.message);
+        } finally {
+            console.log("productsPurchased:", productsPurchased)
+            const purchase = {
+                items: productsPurchased,
+                amount: amount,
+                purchase_datetime: new Date(),
+                purchaser: userEmail
+            };
+
+            const ticket = await TicketService.createTicket(purchase);
+
+            if (productsOutOfStock.length > 0) {
+                await this.updateCart(cid, productsOutOfStock);
+            }
+
+            return { ticket, products_out_of_stock: productsOutOfStock }
+        }
+    }
+
+    validateProductStock = async (pid, quantity) => {
+        try {
+            const product = await ProductService.getProductById(pid);
+            const stock = product.stock;
+
+            if(quantity > stock) {
+                console.log(`Product ${pid} has insufficient stock`);
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            throw new FileError('Error validating product stock: ' + error.message);
         }
     }
     
