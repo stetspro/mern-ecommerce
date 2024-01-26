@@ -5,10 +5,7 @@ import cookieParser from 'cookie-parser';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import { __dirname } from './utils.js';
-import UserRouter from './routes/user.router.js';
-import CartRouter from './routes/carts.router.js';
-import ViewRouter from './routes/views.router.js';
-import ProductRouter from './routes/products.router.js';
+import { ViewRouter, ProductRouter, UserRouter, CartRouter, MockRouter } from './routes/index.router.js';
 import { ProductService, CartService, MessageService } from './services/index.js';
 import { initializePassport } from './config/passport.config.js';
   
@@ -62,10 +59,12 @@ const viewRouter = new ViewRouter();
 const productRouter = new ProductRouter();
 const userRouter = new UserRouter();
 const cartRouter = new CartRouter();
+const mockRouter = new MockRouter();
 
 app.use('/views/', viewRouter.getRouter());
 app.use('/api/products/', productRouter.getRouter());
 app.use('/api/carts/', cartRouter.getRouter());
+app.use('/api/mock/', mockRouter.getRouter());
 app.use('/api/users/', userRouter.getRouter());
 
 app.get('/', (req, res) => {
