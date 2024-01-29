@@ -4,25 +4,31 @@ import { createHash } from "../utils.js";
 import nodemailer from "../config/nodemailer.config.js";
 import twilio from "../config/twilio.config.js";
 import CurrentUserDTO from "../DTO/currentUser.dto.js";
+import CustomError from "../utils/errors/custom.errors.js";
 
-export const registerUser = async (req, res) => {
+export const registerUser = async (req, res, next) => {
     const { password, confirmPassword } = req.body;
 
-    if (password !== confirmPassword) return res.status(400).json({ error: 'Passwords do not match' });
-    
     try 
     {
+        if(!req.body.first_name || !req.body.last_name || !req.body.email || !password || !confirmPassword) {
+            CustomError.createUser(req.body);
+        }
+
+        if (password !== confirmPassword) CustomError.passwordsDontMatch();
+    
         const passwordHashed = await createHash(password);
         
         const registerData = {
-            first_name: req.body.name,
-            last_name: req.body.lastName,
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
             email: req.body.email,
             password: passwordHashed,
             cart: await CartService.createCart()
         }
 
         const user = await UserService.registerUser(registerData); 
+
         nodemailer.sendNewUserMail(user);
         twilio.sendSMS();
 
@@ -32,8 +38,7 @@ export const registerUser = async (req, res) => {
     }
     catch (error) 
     {
-        console.log("Error: ", error)
-        return res.sendServerError(error);
+        next(error);
     }
     
 };
@@ -41,7 +46,7 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try 
     {
-        if (!req.user) return res.status(404).json({ error: 'Invalid credentials' });
+        if (!req.user) CustomError.login();
 
         const token = generateToken(req.user._doc);
 
@@ -64,7 +69,7 @@ export const loginUser = async (req, res) => {
     }
     catch (error) 
     {
-        return res.status(500).json({ error: 'Internal Server Error' });
+        next(error);
     }
     
 };
@@ -91,7 +96,6 @@ export const getCurrentUser = async (req, res) => {
     
     let user = await UserService.getUserByEmail(req.user.email);
     user = new CurrentUserDTO(user);
-
 
     res.status(200).json(user);
 }
