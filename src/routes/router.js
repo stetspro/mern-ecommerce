@@ -70,7 +70,7 @@ export default class AppRouter {
     res.sendServerError = error => res.status(500).json({ status: 'error', error })
     res.sendUserError = error => res.status(400).json({ status: 'error', error })
     res.sendNoAuthenticatedError = (error = 'No auth') => res.status(401).json({ status: 'error', error })
-    res.sendNoAuthorizadError = (error = 'No authorized') => res.status(403).json({ status: 'error', error })
+    res.sendNoAuthorizedError = (error = 'No authorized') => res.status(403).json({ status: 'error', error })
     res.sendNotFound = (error = 'Not found') => res.status(404).json({ status: 'error', error }),
     res.sendForbidden = (error = 'Forbidden') => res.status(403).json({ status: 'error', error }),
     res.sendBadRequest = (error = 'Bad request') => res.status(400).json({ status: 'error', error }),
@@ -82,7 +82,6 @@ export default class AppRouter {
     if(policies.includes('PUBLIC')) return next()
 
     if(policies.length > 0) {
-      console.log('policies', policies)
       passportCall('jwt', policies)(req, res, next)
     } else {
       return res.sendNoAuthenticatedError('This resource is private ')
