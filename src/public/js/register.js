@@ -15,8 +15,9 @@ const onSubmit = async () => {
             body: JSON.stringify({ email, password, confirmPassword, first_name: name, last_name: lastName, age }),
         });
         const data = await response.json();
-        if (data.error) {
-            displayError(data.error);
+
+        if (!data.success) {
+            displayError(data.cause);
         } else {
             window.location.href = '/views/login';
         }
