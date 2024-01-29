@@ -12,7 +12,7 @@ const onSubmit = async () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password, confirmPassword, name, lastName, age }),
+            body: JSON.stringify({ email, password, confirmPassword, first_name: name, last_name: lastName, age }),
         });
         const data = await response.json();
         if (data.error) {

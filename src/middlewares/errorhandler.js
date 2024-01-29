@@ -6,10 +6,9 @@ const ErrorHandler = (err, req, res, next) => {
         success: false,
         status: errStatus,
         message: errMsg,
+        cause: err.cause || {},
         stack: process.env.NODE_ENV === 'dev' ? err.stack : {}
     })
-
-    next();
 }
 
 export default ErrorHandler

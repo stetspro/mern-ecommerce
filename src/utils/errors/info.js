@@ -5,8 +5,8 @@ export const generateUserErrorInfo = (user) => {
          - first_name: Must be a string (${user?.first_name})
          - last_name: Must be a string (${user?.last_name})
          - email: Must be a string (${user?.email})
-         - age: Must be a number (${user?.age})
-         - email: Must be a string (${user?.email})
+         - password: Must be a string
+         - confirmPassword: Must be a string
     `
 }
 
