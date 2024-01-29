@@ -11,9 +11,11 @@ export const registerUser = async (req, res, next) => {
 
     try 
     {
-        if(!req.body.first_name || !req.body.last_name || !req.body.email || !password || !confirmPassword) {
+        if(!req.body.first_name || !req.body.last_name || !req.body.email || !password || !confirmPassword || !req.body.age) {
             CustomError.createUser(req.body);
         }
+
+        if(req.body.age < 18 || req.body.age > 65) CustomError.createUser(req.body);
 
         if (password !== confirmPassword) CustomError.passwordsDontMatch();
     
