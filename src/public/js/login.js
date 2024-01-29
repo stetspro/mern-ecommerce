@@ -10,7 +10,9 @@ const onSubmit = async () => {
             },
             body: JSON.stringify({ email, password }),
         });
+
         const data = await response.json();
+        
         if (data && data.error) {
             const error = document.getElementById('error');
             error.style.display = 'block';
@@ -23,6 +25,6 @@ const onSubmit = async () => {
         return false;
     }
     catch (error) {
-        console.log("error: ", error.message);
+        console.log(error);
     }
 }

@@ -56,9 +56,6 @@ export default class AppRouter {
     return callbacks.map(callback => async (...params) => {
 
       try {
-        // params( req, res, next)
-        // apply apunta directamente a la funcion callback
-        // this es para que se utilize en el contexto de la calase R2_Router
         await callback.apply(this, params)
       } catch (error) {
         console.log(error)
@@ -85,6 +82,7 @@ export default class AppRouter {
     if(policies.includes('PUBLIC')) return next()
 
     if(policies.length > 0) {
+      console.log('policies', policies)
       passportCall('jwt', policies)(req, res, next)
     } else {
       return res.sendNoAuthenticatedError('This resource is private ')

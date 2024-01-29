@@ -2,14 +2,19 @@ import express from 'express';
 import 'dotenv/config'
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import { __dirname } from './utils.js';
 import { ViewRouter, ProductRouter, UserRouter, CartRouter, MockRouter } from './routes/index.router.js';
 import { ProductService, CartService, MessageService } from './services/index.js';
 import { initializePassport } from './config/passport.config.js';
+import ErrorHandler from './middlewares/errorhandler.js';
   
 export const app = express();
+initializePassport();
+app.use(passport.initialize());
+
 app.engine("handlebars", handlebars.engine(
     {
         helpers: {
@@ -47,9 +52,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
 app.use(cookieParser());
-
-initializePassport();
-app.use(passport.initialize());
+app.use(bodyParser.json());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -108,3 +111,5 @@ socketServer.on('connection', async socket => {
         socketServer.sockets.emit('messages', messages);
     });
 });
+
+app.use(ErrorHandler);
