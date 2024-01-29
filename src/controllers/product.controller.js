@@ -1,4 +1,5 @@
 import { ProductService } from '../services/index.js';
+import CustomError from '../utils/errors/custom.errors.js';
 
 export const getProducts = async (req, res) => {
     const { limit, page, sort, query } = req.query;
@@ -30,11 +31,15 @@ export const addProduct = async (req, res) => {
     const data = req.body;
 
     try {
+        if(!data.title || !data.price || !data.stock || !data.thumbnail || !data.code || !data.description || !data.category) {
+            CustomError.createProduct(data);
+        }
+
         const addProductRes = await ProductService.addProduct(data);
         return res.json({ productId: addProductRes });
     }
     catch(error) {
-        res.status(500).json({ error: "Internal server error: " + error.message });
+        next(error);
     }
 };
 
@@ -60,14 +65,14 @@ export const deleteProduct = async (req, res) => {
     const pid = req.params.pid;
     
     try {
+        if(!pid) {
+            CustomError.deleteProduct();
+        }
+
         const deleteProductRes = await ProductService.deleteProduct(pid);
         return res.json({ productId: deleteProductRes });
     }
     catch(error) {
-        if (error instanceof ProductNotFoundError) {
-            res.status(404).json({ error: error.message });
-        } else {
-            res.status(500).json({ error: "Internal server error: " + error.message });
-        }
+        next(error);
     }
 };

@@ -1,4 +1,5 @@
 import { CartService } from "../services/index.js";
+import CustomError from "../utils/errors/custom.errors.js";
 
 export const createCart = async (req, res) => {
     try {
@@ -120,20 +121,15 @@ export const purchaseCart = async (req, res) => {
     const userEmail = req.user.email;
 
     try {
-        if(!userEmail) {
-            return res.sendBadRequest("User email is required");
-        }
-
-        if(!cid) {
-            return res.sendBadRequest("Cart ID is required");
+        if(!userEmail || !cid) {
+            CustomError.createOrder({ email: userEmail, cid });
         }
 
         const result = await CartService.purchaseCart(cid, userEmail);
         return res.sendSuccess(result);
     }
     catch(error) {
-        console.error(error.message);
-        res.sendServerError(error);
+        next(error);
     }
     
 }

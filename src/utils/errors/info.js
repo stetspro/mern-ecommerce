@@ -28,8 +28,7 @@ export const generateOrderErrorInfo = (order) => {
     return `
         Uno o mas propiedades estan incompletos o son invalidos.
         Lista de Propiedades obligatorias
-         - amount: Must be a number (${order?.amount})
-         - items: Must be a array of objects (${order?.items})
-         - purchaser: Must be a string (${order?.purchaser})
+         - userEmail: Must be a string (${order?.email})
+         - cid: Must be a string (${order?.cid})
     `
 }
