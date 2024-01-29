@@ -74,18 +74,17 @@ export const initializePassport = async () => {
                 const user = await UserService.getUserByEmail(username);
 
                 if(!user) {
-                    console.error('user doesnt exist');
-                    return done(null, false);
+                    return done(null, false, { message: 'User doesn\'t exist' });
                 }
 
                 if(!compareHash(password, user.password)) {
-                    console.error('password not valid');
-                    return done(null, false);
+                    return done(null, false, { message: 'Password not valid' });
                 }
 
                 return done(null, user);
             } catch (error) {
-                return done('error login ' + error);
+                console.log('Error passport-login: ', error);
+                return done('Error passport-login: ' + error);
             }
         }
     ))
