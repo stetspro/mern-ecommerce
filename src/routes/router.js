@@ -58,7 +58,6 @@ export default class AppRouter {
       try {
         await callback.apply(this, params)
       } catch (error) {
-        console.log(error)
         params[1].status(500).send(error)
       }
 

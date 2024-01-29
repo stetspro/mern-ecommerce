@@ -11,16 +11,18 @@ const onSubmit = async () => {
             body: JSON.stringify({ email, password }),
         });
 
-        const data = await response.json();
-        
-        if (data && data.error) {
+        if(!response.ok) {
             const error = document.getElementById('error');
             error.style.display = 'block';
-            error.innerHTML = data.error;
-        } else if(data){
-            sessionStorage["user"] = JSON.stringify(data);
-            window.location.href = '/views/products';
+            error.innerHTML = 'Invalid credentials';
+
+            return false;
         }
+
+        const data = await response.json();
+        
+        sessionStorage["user"] = JSON.stringify(data);
+        window.location.href = '/views/products';
 
         return false;
     }
