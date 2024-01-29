@@ -13,7 +13,7 @@ const productSchema = new mongoose.Schema({
     thumbnail: { type: String, required: true },
     code: { type: String, required: true, max: 100 },
     stock: { type: Number, required: true },
-    status: { type: Boolean, required: true },
+    status: { type: Boolean, default: true, required: true },
     category: { type: String, required: true, max: 100 }
 });
 
