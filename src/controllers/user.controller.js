@@ -41,7 +41,6 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try 
     {
-        console.log("req.user: ", req.user)
         if (!req.user) return res.status(404).json({ error: 'Invalid credentials' });
 
         const token = generateToken(req.user._doc);
