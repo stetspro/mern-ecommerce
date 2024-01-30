@@ -45,7 +45,7 @@ export const registerUser = async (req, res, next) => {
     
 };
 
-export const loginUser = async (req, res) => {
+export const loginUser = async (req, res, next) => {
     try 
     {
         if (!req.user) CustomError.login();
