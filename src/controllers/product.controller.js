@@ -27,7 +27,7 @@ export const getProductById = async (req, res) => {
     
 };
 
-export const addProduct = async (req, res) => {
+export const addProduct = async (req, res, next) => {
     const data = req.body;
 
     try {
@@ -61,7 +61,7 @@ export const updateProduct = async (req, res) => {
    
 };
 
-export const deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res, next) => {
     const pid = req.params.pid;
     
     try {

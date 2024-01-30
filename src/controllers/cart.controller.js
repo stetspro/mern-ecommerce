@@ -116,7 +116,7 @@ export const deleteProductFromCart = async (req, res) => {
     }
 };
 
-export const purchaseCart = async (req, res) => {
+export const purchaseCart = async (req, res, next) => {
     const cid = req.params.cid;
     const userEmail = req.user.email;
 
