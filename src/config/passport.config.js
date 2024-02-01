@@ -50,7 +50,7 @@ export const initializePassport = async () => {
         try {
             const user = await UserService.getUserByEmail(username);
             if (user) {
-                console.log('User already exits');
+                //console.log('User already exits');
                 return done(null, false)
             }
 
@@ -83,7 +83,7 @@ export const initializePassport = async () => {
 
                 return done(null, user);
             } catch (error) {
-                console.log('Error passport-login: ', error);
+                //console.log('Error passport-login: ', error);
                 return done('Error passport-login: ' + error);
             }
         }

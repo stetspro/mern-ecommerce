@@ -7,13 +7,13 @@ export let Cart
 export let Message
 export let Ticket
 
-console.log(`Persistence with ${config.persistence}`)
+//console.log(`Persistence with ${config.persistence}`)
 
 switch (config.persistence) {
     case "MONGO":
 
         await mongoose.connect(config.mongoUrl, { dbName: config.mongoDbName })
-        console.log('DB connected 👌')
+        //console.log('DB connected 👌')
 
         const { default: UserMongo } = await import('./mongo/user.mongo.js')
         const { default: ProductMongo } = await import('./mongo/product.mongo.js')

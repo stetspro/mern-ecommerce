@@ -9,7 +9,7 @@ export default class UserRepository {
             return await this.dao.getUserByEmail(email);
         }
         catch (error) {
-            console.log(error);
+            //console.log(error);
             throw error;
         }
     }
@@ -19,18 +19,18 @@ export default class UserRepository {
             return await this.dao.getUserById(id);
         }
         catch (error) {
-            console.log(error);
+            //console.log(error);
             throw error;
         }
     }
     
     registerUser = async (user) => {
         try {
-            console.log(user)
+            //console.log(user)
             return await this.dao.createUser(user);
         }
         catch (error) {
-            console.log(error);
+            //console.log(error);
             throw error;
         }
     }
