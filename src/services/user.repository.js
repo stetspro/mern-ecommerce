@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger.js";
 
 export default class UserRepository {
     constructor(dao) {
@@ -9,7 +10,7 @@ export default class UserRepository {
             return await this.dao.getUserByEmail(email);
         }
         catch (error) {
-            //console.log(error);
+            logger.error('Error while getting user by email: ' + error);
             throw error;
         }
     }
@@ -19,18 +20,17 @@ export default class UserRepository {
             return await this.dao.getUserById(id);
         }
         catch (error) {
-            //console.log(error);
+            logger.error('Error while getting user by id: ' + error);
             throw error;
         }
     }
     
     registerUser = async (user) => {
         try {
-            //console.log(user)
             return await this.dao.createUser(user);
         }
         catch (error) {
-            //console.log(error);
+            logger.error('Error while registering user: ' + error);
             throw error;
         }
     }

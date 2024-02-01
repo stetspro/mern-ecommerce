@@ -1,5 +1,6 @@
 import { createTransport } from 'nodemailer';
 import dotenv from 'dotenv';
+import { logger } from '../utils/logger.js';
 dotenv.config();
 
 const transporterGmail = createTransport({
@@ -30,10 +31,12 @@ async function sendNewUserMail(newUser) {
         }
 
         const info = await transporterGmail.sendMail(mailOptions)
-        //console.log(info)
+
+        logger.debug("User mail sent: ", info);
+        return
     }
     catch (error) {
-        //console.log(error)
+        logger.error(error);
     }
 
     return;
@@ -50,11 +53,12 @@ async function sendNewOrder(message) {
             html
         }
 
-        const info = await transporterGmail.sendMail(mailOptions)
-        //console.log(info)
+        const info = await transporterGmail.sendMail(mailOptions);
+        logger.debug("Order mail sent: ", info);
+        return;
     }
     catch (error) {
-        //console.log(error)
+        logger.error(error);
     }
 }
 

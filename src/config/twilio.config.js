@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 import twilio from 'twilio';
+import { logger } from '../utils/logger.js';
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -16,9 +17,9 @@ const optionsWpp = {
 async function sendSMS() {
     try {
         const message = await client.messages.create(optionsWpp);
-        //console.log(message);
+        logger.debug("SMS sent: ", message);
      } catch (error) {
-        //console.log(error);
+        logger.error(error);
      }
 }
 

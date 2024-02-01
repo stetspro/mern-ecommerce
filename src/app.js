@@ -10,6 +10,7 @@ import { ViewRouter, ProductRouter, UserRouter, CartRouter, MockRouter } from '.
 import { ProductService, CartService, MessageService } from './services/index.js';
 import { initializePassport } from './config/passport.config.js';
 import ErrorHandler from './middlewares/errorhandler.js';
+import { addLogger, logger } from './utils/logger.js';
   
 export const app = express();
 initializePassport();
@@ -58,6 +59,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
+app.use(addLogger);
+
 const viewRouter = new ViewRouter();
 const productRouter = new ProductRouter();
 const userRouter = new UserRouter();
@@ -74,13 +77,13 @@ app.get('/', (req, res) => {
     res.redirect('/views/products');
 });
 
-const httpServer = app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
+const httpServer = app.listen(process.env.PORT, () => logger.debug(`Server running on port ${process.env.PORT}`));
 const socketServer = new Server(httpServer);
 
 // <--- Socket Connection --->
 
 socketServer.on('connection', async socket => {
-    //console.log("New client connection");
+    logger.debug("New client connection");
 
     // <--- Product List sockets --->
     socket.on("onaddtocart", async (data) => {
