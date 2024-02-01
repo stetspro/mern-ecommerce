@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger.js";
 import { ProductService, TicketService } from "./index.js";
 
 export class CartNotFoundError extends Error {
@@ -136,7 +137,7 @@ export default class CartRepository {
                 const hasStock = await this.validateProductStock(pid, quantity);
 
                 if (hasStock) {
-                    //console.log(`Product ${pid} has sufficient stock`);
+                    logger.debug(`Product ${pid} has sufficient stock`);
                     await ProductService.updateProductStock(pid, -quantity);
                     productsPurchased.push({ id: pid, quantity: quantity });
                     amount += product.id.price * product.quantity;
@@ -148,7 +149,8 @@ export default class CartRepository {
         } catch (error) {
             throw new Error('Error purchasing cart: ' + error.message);
         } finally {
-            //console.log("productsPurchased:", productsPurchased)
+            logger.debug("productsPurchased:", productsPurchased)
+
             const purchase = {
                 items: productsPurchased,
                 amount: amount,
@@ -172,7 +174,7 @@ export default class CartRepository {
             const stock = product.stock;
 
             if(quantity > stock) {
-                //console.log(`Product ${pid} has insufficient stock`);
+                logger.debug(`Product ${pid} has insufficient stock`);
                 return false;
             }
 

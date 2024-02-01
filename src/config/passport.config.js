@@ -5,6 +5,7 @@ import { createHash, compareHash } from "../utils.js"
 import local from 'passport-local';
 import jwt from 'passport-jwt';
 import 'dotenv/config';
+import { logger } from "../utils/logger.js";
 
 const LocalStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
@@ -50,7 +51,7 @@ export const initializePassport = async () => {
         try {
             const user = await UserService.getUserByEmail(username);
             if (user) {
-                //console.log('User already exits');
+                logger.info('User already exits');
                 return done(null, false)
             }
 
@@ -83,7 +84,7 @@ export const initializePassport = async () => {
 
                 return done(null, user);
             } catch (error) {
-                //console.log('Error passport-login: ', error);
+                logger.error('Error passport-login: ' + error);
                 return done('Error passport-login: ' + error);
             }
         }
