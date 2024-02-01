@@ -80,7 +80,7 @@ const socketServer = new Server(httpServer);
 // <--- Socket Connection --->
 
 socketServer.on('connection', async socket => {
-    console.log("New client connection");
+    //console.log("New client connection");
 
     // <--- Product List sockets --->
     socket.on("onaddtocart", async (data) => {

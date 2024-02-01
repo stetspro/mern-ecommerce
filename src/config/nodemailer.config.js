@@ -30,10 +30,10 @@ async function sendNewUserMail(newUser) {
         }
 
         const info = await transporterGmail.sendMail(mailOptions)
-        console.log(info)
+        //console.log(info)
     }
     catch (error) {
-        console.log(error)
+        //console.log(error)
     }
 
     return;
@@ -51,10 +51,10 @@ async function sendNewOrder(message) {
         }
 
         const info = await transporterGmail.sendMail(mailOptions)
-        console.log(info)
+        //console.log(info)
     }
     catch (error) {
-        console.log(error)
+        //console.log(error)
     }
 }
 

@@ -16,9 +16,9 @@ const optionsWpp = {
 async function sendSMS() {
     try {
         const message = await client.messages.create(optionsWpp);
-        console.log(message);
+        //console.log(message);
      } catch (error) {
-        console.log(error);
+        //console.log(error);
      }
 }
 

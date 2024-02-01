@@ -136,7 +136,7 @@ export default class CartRepository {
                 const hasStock = await this.validateProductStock(pid, quantity);
 
                 if (hasStock) {
-                    console.log(`Product ${pid} has sufficient stock`);
+                    //console.log(`Product ${pid} has sufficient stock`);
                     await ProductService.updateProductStock(pid, -quantity);
                     productsPurchased.push({ id: pid, quantity: quantity });
                     amount += product.id.price * product.quantity;
@@ -148,7 +148,7 @@ export default class CartRepository {
         } catch (error) {
             throw new Error('Error purchasing cart: ' + error.message);
         } finally {
-            console.log("productsPurchased:", productsPurchased)
+            //console.log("productsPurchased:", productsPurchased)
             const purchase = {
                 items: productsPurchased,
                 amount: amount,
@@ -172,7 +172,7 @@ export default class CartRepository {
             const stock = product.stock;
 
             if(quantity > stock) {
-                console.log(`Product ${pid} has insufficient stock`);
+                //console.log(`Product ${pid} has insufficient stock`);
                 return false;
             }
 
