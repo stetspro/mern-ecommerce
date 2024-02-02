@@ -29,9 +29,6 @@ app.engine("handlebars", handlebars.engine(
             eq: function (a, b) { 
                 return a == b; 
             },
-            cl: function (v) { 
-                console.log(v); 
-            },
             getCartSubtotal: function (products) {
                 let subtotal = 0;
 
