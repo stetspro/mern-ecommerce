@@ -31,10 +31,12 @@ export const registerUser = async (req, res, next) => {
 
         const user = await UserService.registerUser(registerData); 
 
-        nodemailer.sendNewUserMail(user);
-        twilio.sendSMS();
-
-        if(user) return res.sendSuccess(user);
+        if(user) {
+            nodemailer.sendNewUserMail(user);
+            twilio.sendSMS();
+    
+            return res.sendSuccess(user);
+        }
         
         return res.sendUserError('User couldnt be registered');
     }
