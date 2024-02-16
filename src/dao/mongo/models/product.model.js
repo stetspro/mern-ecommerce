@@ -2,8 +2,6 @@ import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import 'dotenv/config';
 
-const dbConnection = mongoose.createConnection(process.env.MONGO_URI_ECOMMERCE);
-
 const productCollection = 'products';
 
 const productSchema = new mongoose.Schema({
@@ -19,4 +17,4 @@ const productSchema = new mongoose.Schema({
 
 productSchema.plugin(mongoosePaginate);
 
-export const ProductModel = dbConnection.model(productCollection, productSchema);
+export const ProductModel = mongoose.model(productCollection, productSchema);

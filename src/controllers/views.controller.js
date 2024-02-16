@@ -1,4 +1,4 @@
-import { CartService, MessageService, ProductService } from '../services/index.js';
+import { CartService, MessageService, ProductService } from '../repositories/index.js';
 
 export const getProducts = async (req, res) => {
     const { limit, page, sort, query } = req.query;

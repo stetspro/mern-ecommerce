@@ -31,16 +31,7 @@ switch (config.persistence) {
         break;
 
     // case "FILE":
-
-    //     const { default: OrderFile } = await import('./file/orders.file.js')
-    //     const { default: UserFile } = await import('./file/users.file.js')
-    //     const { default: StoreFile } = await import('./file/stores.file.js')
-
-    //     Order = OrderFile
-    //     User = UserFile
-    //     Store = StoreFile
-
-    //     break
+    //   break;
 
     default:
         throw new Error('Persistence not recognized')

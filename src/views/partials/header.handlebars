@@ -12,10 +12,9 @@
 
         <div class="hidden lg:flex lg:gap-x-12">
             <a href="/views/products" class="text-sm font-semibold leading-6 text-gray-900">Products</a>
-            
-            <a href="/views/realtimeproducts" id="realTimeProductsRoute" class="text-sm font-semibold leading-6 text-gray-900 admin-only">Add products</a>
-            <a href="#" id="cartRoute" class="text-sm font-semibold leading-6 text-gray-900 hidden">Cart</a>
-            <a href="/views/chat" id="chatRoute" class="text-sm font-semibold leading-6 text-gray-900 hidden">Chat</a>
+            <a href="/views/realtimeproducts" id="realTimeProductsRoute" class="text-sm font-semibold leading-6 text-gray-900 admin_role">Add products</a>
+            <a href="#" id="cartRoute" class="text-sm font-semibold leading-6 text-gray-900 user_role">Cart</a>
+            <a href="/views/chat" id="chatRoute" class="text-sm font-semibold leading-6 text-gray-900 user_role">Chat</a>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
             <a href="#" onclick="logout(); return false;" class="hidden text-sm font-semibold leading-6 text-gray-900">Log out <span aria-hidden="true">&rarr;</span></a>
@@ -28,7 +27,7 @@
 <script src="/js/header.js"></script>
 
 <style>
-    .admin-only {
+    .user_role, .admin_role {
         display: none;
     }
 </style>

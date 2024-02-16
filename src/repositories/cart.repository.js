@@ -159,11 +159,8 @@ export default class CartRepository {
             };
 
             const ticket = await TicketService.createTicket(purchase);
-
-            if (productsOutOfStock.length > 0) {
-                await this.updateCart(cid, productsOutOfStock);
-            }
-
+            await this.updateCart(cid, productsOutOfStock);
+            
             return { ticket, products_out_of_stock: productsOutOfStock }
         }
     }

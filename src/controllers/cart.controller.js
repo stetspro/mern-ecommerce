@@ -1,4 +1,4 @@
-import { CartService } from "../services/index.js";
+import { CartService } from "../repositories/index.js";
 import CustomError from "../utils/errors/custom.errors.js";
 
 export const createCart = async (req, res) => {

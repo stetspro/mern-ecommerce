@@ -1,4 +1,4 @@
-import { ProductService } from '../services/index.js';
+import { ProductService } from '../repositories/index.js';
 import CustomError from '../utils/errors/custom.errors.js';
 
 export const getProducts = async (req, res) => {

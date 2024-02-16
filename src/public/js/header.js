@@ -44,6 +44,9 @@ const initializeHeader = async () => {
 
     if(user && !user.message) {
         const hiddenElements = document.querySelectorAll('.hidden');
+        const roleClass = user.role.toLowerCase();
+        
+
         hiddenElements.forEach(element => {
             element.classList.remove('hidden');
         });
@@ -53,12 +56,12 @@ const initializeHeader = async () => {
         if(user.cart) {
             document.getElementById('cartRoute').href = `/views/cart/${user.cart}`;
         }
-
-        if(user.role == 'ADMIN_ROLE') {
-            document.querySelectorAll('.admin-only').forEach(element => {
-                element.classList.remove('admin-only');
-            });
-        }
+        
+        document.querySelectorAll('.' + roleClass).forEach(element => {
+            console.log(element)
+            element.classList.remove(roleClass);
+        });
+        
     }
 }
 

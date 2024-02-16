@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import 'dotenv/config';
 
-const dbConnection = mongoose.createConnection(process.env.MONGO_URI_ECOMMERCE);
-
 const messageCollection = 'messages';
 
 const messageSchema = new mongoose.Schema(
@@ -12,4 +10,4 @@ const messageSchema = new mongoose.Schema(
     }
 );
 
-export const MessageModel = dbConnection.model(messageCollection, messageSchema);
+export const MessageModel = mongoose.model(messageCollection, messageSchema);

@@ -1,5 +1,5 @@
 import passport from "passport";
-import { UserService } from "../services/index.js";
+import { UserService } from "../repositories/index.js";
 import GitHubStrategy from "passport-github2";
 import { createHash, compareHash } from "../utils.js"
 import local from 'passport-local';

@@ -1,4 +1,4 @@
-import { UserService, CartService } from "../services/index.js";
+import { UserService, CartService } from "../repositories/index.js";
 import { generateToken } from "../utils.js";
 import { createHash } from "../utils.js";
 import nodemailer from "../config/nodemailer.config.js";

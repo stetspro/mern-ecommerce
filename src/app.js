@@ -7,7 +7,7 @@ import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import { __dirname } from './utils.js';
 import { ViewRouter, ProductRouter, UserRouter, CartRouter, MockRouter } from './routes/index.router.js';
-import { ProductService, CartService, MessageService } from './services/index.js';
+import { ProductService, CartService, MessageService } from './repositories/index.js';
 import { initializePassport } from './config/passport.config.js';
 import ErrorHandler from './middlewares/errorhandler.js';
 import { addLogger, logger } from './utils/logger.js';

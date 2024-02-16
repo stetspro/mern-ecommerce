@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import 'dotenv/config';
 
-const dbConnection = mongoose.createConnection(process.env.MONGO_URI_ECOMMERCE);
-
 const cartCollection = 'carts';
 
 const CartSchema = new mongoose.Schema({
@@ -32,4 +30,4 @@ CartSchema.set('toJSON', {
     }
 });
 
-export const CartModel = dbConnection.model(cartCollection, CartSchema);
+export const CartModel = mongoose.model(cartCollection, CartSchema);

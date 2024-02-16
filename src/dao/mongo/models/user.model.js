@@ -2,8 +2,6 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 import { CartModel } from './cart.model.js';
 
-const dbConnection = mongoose.createConnection(process.env.MONGO_URI_ECOMMERCE);
-
 const userCollection = 'users';
 
 const userSchema = new mongoose.Schema(
@@ -27,4 +25,4 @@ userSchema.set('toJSON', {
     }
 });
 
-export const UserModel = dbConnection.model(userCollection, userSchema);
+export const UserModel = mongoose.model(userCollection, userSchema);
