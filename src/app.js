@@ -84,7 +84,7 @@ app.get('/loggerTest', (req, res) => {
     res.send('Logger test');
 });
 
-const httpServer = app.listen(process.env.PORT, () => logger.debug(`Server running on port ${process.env.PORT}`));
+const httpServer = app.listen(process.env.PORT, () => logger.debug(`Server running on  http://localhost:${process.env.PORT}`));
 const socketServer = new Server(httpServer);
 
 // <--- Socket Connection --->

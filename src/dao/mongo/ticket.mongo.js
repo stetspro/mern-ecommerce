@@ -1,6 +1,6 @@
 import { TicketModel } from "./models/ticket.model.js";
 
-export default class Ticket {
+export default class TicketDAO {
     constructor() {
         this.ticketModel = TicketModel;
     }

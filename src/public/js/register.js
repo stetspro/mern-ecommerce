@@ -16,10 +16,10 @@ const onSubmit = async () => {
         });
         const data = await response.json();
 
-        if (!data.success) {
-            displayError(data.cause);
-        } else {
+        if (data && data.status && data.status == 'success') {
             window.location.href = '/views/login';
+        } else {
+            displayError(data.error);
         }
 
         return false;

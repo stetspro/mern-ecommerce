@@ -1,6 +1,6 @@
 import { ProductModel } from "./models/product.model.js";
 
-export default class Product {
+export default class ProductDAO {
     constructor() {
         this.productModel = ProductModel;
     }

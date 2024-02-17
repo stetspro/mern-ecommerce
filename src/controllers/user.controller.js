@@ -1,8 +1,6 @@
 import { UserService, CartService } from "../repositories/index.js";
 import { generateToken } from "../utils.js";
 import { createHash } from "../utils.js";
-import nodemailer from "../config/nodemailer.config.js";
-import twilio from "../config/twilio.config.js";
 import CurrentUserDTO from "../DTO/currentUser.dto.js";
 import CustomError from "../utils/errors/custom.errors.js";
 
@@ -31,10 +29,7 @@ export const registerUser = async (req, res, next) => {
 
         const user = await UserService.registerUser(registerData); 
 
-        if(user) {
-            nodemailer.sendNewUserMail(user);
-            twilio.sendSMS();
-    
+        if(user && user._id) {
             return res.sendSuccess(user);
         }
         

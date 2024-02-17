@@ -1,5 +1,4 @@
 import { logger } from "../utils/logger.js";
-import { ProductService, TicketService } from "./index.js";
 
 export class CartNotFoundError extends Error {
     constructor(message) {
@@ -16,8 +15,10 @@ export class FileError extends Error {
 }
 
 export default class CartRepository {
-    constructor(dao) {
-        this.dao = dao;
+    constructor(cartDao, productDao, ticketDao) {
+        this.cartDao = cartDao;
+        this.productDao = productDao;
+        this.ticketDao = ticketDao;
     }
 
     createCart = async () => {
@@ -26,7 +27,7 @@ export default class CartRepository {
                 products: []
             };
 
-            const res = await this.dao.createCart(cart);
+            const res = await this.cartDao.createCart(cart);
 
             return res;
         }
@@ -38,7 +39,7 @@ export default class CartRepository {
 
     getCartById = async (id) => {
         try {
-            const cart = await this.dao.getCartById(id);
+            const cart = await this.cartDao.getCartById(id);
             return cart;
         }
         catch(error) {
@@ -48,18 +49,18 @@ export default class CartRepository {
 
     addProductToCart = async (cid, pid, quantity) => {
         try {
-            const isProductInCart = await this.dao.getProductById(cid, pid);
+            const isProductInCart = await this.cartDao.getProductById(cid, pid);
             let res;
 
             if(isProductInCart !== null) {
-                res = await this.dao.updateProductQuantity(cid, pid, quantity || 1);
+                res = await this.cartDao.updateProductQuantity(cid, pid, quantity || 1);
             } else {
                 const newProduct = {
                     id: pid,
                     quantity: 1
                 };
 
-                res = await this.dao.addProductToCart(cid, newProduct);
+                res = await this.cartDao.addProductToCart(cid, newProduct);
             }
     
             return res;
@@ -70,7 +71,7 @@ export default class CartRepository {
 
     deleteProductFromCart = async (cid, pid) => {
         try {
-            const updatedCart = await this.dao.deleteProductFromCart(cid, pid);
+            const updatedCart = await this.cartDao.deleteProductFromCart(cid, pid);
     
             if (!updatedCart) {
                 throw new Error("Product not found in cart");
@@ -84,7 +85,7 @@ export default class CartRepository {
 
     updateCart = async (cid, products) => {
         try {
-            const updatedCart = await this.dao.updateCart(cid, products);
+            const updatedCart = await this.cartDao.updateCart(cid, products);
     
             if (!updatedCart) {
                 throw new CartNotFoundError("A cart with that ID does not exist.");
@@ -98,7 +99,7 @@ export default class CartRepository {
 
     deleteCart = async (cid) => {
         try {
-            const res = this.dao.deleteCart(cid);
+            const res = this.cartDao.deleteCart(cid);
 
             return res;
         } catch (error) {
@@ -138,7 +139,7 @@ export default class CartRepository {
 
                 if (hasStock) {
                     logger.debug(`Product ${pid} has sufficient stock`);
-                    await ProductService.updateProductStock(pid, -quantity);
+                    await this.productDao.updateProductStock(pid, -quantity);
                     productsPurchased.push({ id: pid, quantity: quantity });
                     amount += product.id.price * product.quantity;
                 } else {
@@ -158,7 +159,7 @@ export default class CartRepository {
                 purchaser: userEmail
             };
 
-            const ticket = await TicketService.createTicket(purchase);
+            const ticket = await this.ticketDao.createTicket(purchase);
             await this.updateCart(cid, productsOutOfStock);
             
             return { ticket, products_out_of_stock: productsOutOfStock }
@@ -167,7 +168,7 @@ export default class CartRepository {
 
     validateProductStock = async (pid, quantity) => {
         try {
-            const product = await ProductService.getProductById(pid);
+            const product = await this.productDao.getProductById(pid);
             const stock = product.stock;
 
             if(quantity > stock) {

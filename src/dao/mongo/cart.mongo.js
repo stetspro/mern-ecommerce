@@ -1,7 +1,7 @@
 import { CartModel } from "./models/cart.model.js";
 import { ProductModel } from "./models/product.model.js";
 
-export default class Cart {
+export default class CartDAO {
     constructor() {
         this.cartModel = CartModel;
     }

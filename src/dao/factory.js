@@ -2,11 +2,11 @@ import config from "../config/config.js";
 import mongoose from "mongoose";
 import { logger } from "../utils/logger.js";
 
-export let User
-export let Product
-export let Cart
-export let Message
-export let Ticket
+export let UserDAO
+export let ProductDAO
+export let CartDAO
+export let MessageDAO
+export let TicketDAO
 
 logger.info(`Persistence with ${config.persistence}`)
 
@@ -22,11 +22,11 @@ switch (config.persistence) {
         const { default: MessageMongo } = await import('./mongo/message.mongo.js')
         const { default: TicketMongo } = await import('./mongo/ticket.mongo.js')
 
-        User = UserMongo
-        Product = ProductMongo
-        Cart = CartMongo
-        Message = MessageMongo
-        Ticket = TicketMongo
+        UserDAO = UserMongo
+        ProductDAO = ProductMongo
+        CartDAO = CartMongo
+        MessageDAO = MessageMongo
+        TicketDAO = TicketMongo
 
         break;
 

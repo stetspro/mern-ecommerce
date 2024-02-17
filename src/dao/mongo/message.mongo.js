@@ -1,6 +1,6 @@
 import { MessageModel } from "./models/message.model.js";
 
-export default class Message {
+export default class MessageDAO {
     constructor() {
         this.messageModel = MessageModel;
     }
