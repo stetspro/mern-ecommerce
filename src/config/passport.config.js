@@ -1,7 +1,7 @@
 import passport from "passport";
 import { UserService } from "../repositories/index.js";
 import GitHubStrategy from "passport-github2";
-import { createHash, compareHash } from "../utils.js"
+import { createHash, compareAsync } from "../utils.js"
 import local from 'passport-local';
 import jwt from 'passport-jwt';
 import 'dotenv/config';
@@ -78,7 +78,9 @@ export const initializePassport = async () => {
                     return done(null, false, { message: 'User doesn\'t exist' });
                 }
 
-                if(!compareHash(password, user.password)) {
+                const validPassword = await compareAsync(password, user.password)
+
+                if(!validPassword) {
                     return done(null, false, { message: 'Password not valid' });
                 }
 

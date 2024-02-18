@@ -8,6 +8,7 @@ export default class UserRepository {
 
     getUserByEmail = async (email) => {
         try {
+            logger.info(email)
             return await this.userDao.getUserByEmail(email);
         }
         catch (error) {
@@ -38,6 +39,16 @@ export default class UserRepository {
         }
         catch (error) {
             logger.error('Error while registering user: ' + error);
+            throw error;
+        }
+    }
+
+    updateUser = async (userId, user) => {
+        try {
+            return this.userDao.updateUser(userId, user);
+        }
+        catch (error) {
+            logger.error(error);
             throw error;
         }
     }

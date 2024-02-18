@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger.js";
 import { UserModel } from "./models/user.model.js";
 
 export default class UserDAO {
@@ -21,7 +22,7 @@ export default class UserDAO {
         return await this.userModel.create({ ...user });
     }
 
-    async updateUser(id, user) {
+    async updateUser(id, user) { 
         return await this.userModel.findByIdAndUpdate(id, user);
     }
 

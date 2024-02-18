@@ -19,19 +19,30 @@ export const uploader = multer({ storage });
 
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { logger } from './utils/logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
 
 export const __dirname = path.dirname(__filename);
 
-export const generateToken = (user) => {
+export const generateToken = (user, expires) => {
     const token = jwt.sign(
-        { id: user._id, email: user.email, role: user.role },
+        { id: user._id, email: user.email, role: user.role, hash: user.password },
         process.env.JWT_SECRET,
-        { expiresIn: '24h' }
+        { expiresIn: expires }
     );
 
     return token;
+}
+
+export const verifyToken = async (token) => {
+    try {
+        return jwt.verify(token, process.env.JWT_SECRET);
+    }
+    catch (err) {
+        logger.error(err);
+        throw err;
+    }
 }
 
 export const passportCall = (strategy, roles = []) => {
@@ -57,6 +68,14 @@ export const createHash = async (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 }
 
-export const compareHash = async (password, hash) => {
-    return bcrypt.compareSync(password, hash);
+export const compareAsync = (password, hash) => {
+    return new Promise(function(resolve, reject) {
+        bcrypt.compare(password, hash, function(err, res) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(res);
+            }
+        });
+    });
 }

@@ -44,3 +44,8 @@ export const getMessages = async (req, res) => {
     const messages = await MessageService.getAllMessages();
     res.render("chat", { messages });
 };
+
+export const getResetPasswordView = async (req, res) => {
+    const { userId, token } = req.params;
+    res.render("resetPassword", { userId, token });
+}

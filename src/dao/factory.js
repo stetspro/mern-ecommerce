@@ -7,6 +7,7 @@ export let ProductDAO
 export let CartDAO
 export let MessageDAO
 export let TicketDAO
+export let TokenDAO
 
 logger.info(`Persistence with ${config.persistence}`)
 
@@ -21,12 +22,14 @@ switch (config.persistence) {
         const { default: CartMongo } = await import('./mongo/cart.mongo.js')
         const { default: MessageMongo } = await import('./mongo/message.mongo.js')
         const { default: TicketMongo } = await import('./mongo/ticket.mongo.js')
+        const { default: TokenMongo } = await import('./mongo/token.mongo.js')
 
         UserDAO = UserMongo
         ProductDAO = ProductMongo
         CartDAO = CartMongo
         MessageDAO = MessageMongo
         TicketDAO = TicketMongo
+        TokenDAO = TokenMongo
 
         break;
 

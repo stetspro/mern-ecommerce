@@ -9,5 +9,6 @@ export default {
     mongoDbName: process.env.MONGO_DB_NAME,
     environment: process.env.NODE_ENV,
     mailUser: process.env.GOOGLE_ACC,
-    mailPass: process.env.GOOGLE_PW
+    mailPass: process.env.GOOGLE_PW,
+    baseUrl: process.env.BASE_URL
 }

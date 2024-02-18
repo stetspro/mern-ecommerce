@@ -33,7 +33,7 @@ export const registerUser = async (req, res, next) => {
             return res.sendSuccess(user);
         }
         
-        return res.sendUserError('User couldnt be registered');
+        return res.sendBadRequest('User couldnt be registered');
     }
     catch (error) 
     {
@@ -47,7 +47,7 @@ export const loginUser = async (req, res, next) => {
     {
         if (!req.user) CustomError.login();
 
-        const token = generateToken(req.user._doc);
+        const token = generateToken(req.user._doc, '24h');
 
         res.cookie('access_token', token, {
             httpOnly: true,
@@ -74,7 +74,7 @@ export const loginUser = async (req, res, next) => {
 };
 
 export const loginGithub = async (req, res) => {
-    const token = generateToken(req.user._doc);
+    const token = generateToken(req.user._doc, '24h');
 
     res.cookie('access_token', token, {
         httpOnly: true,
@@ -97,4 +97,10 @@ export const getCurrentUser = async (req, res) => {
     user = new CurrentUserDTO(user);
 
     res.status(200).json(user);
+}
+
+export const sendPasswordLink = async (req, res) => {
+    if(!req.email) return res.status(400).json({ message: "Email is required"});
+
+
 }

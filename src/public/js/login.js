@@ -16,6 +16,7 @@ const onSubmit = async () => {
             error.style.display = 'block';
             error.innerHTML = 'Invalid credentials';
 
+            console.log(response)
             return false;
         }
 
@@ -29,4 +30,29 @@ const onSubmit = async () => {
     catch (error) {
         console.log(error);
     }
+}
+
+function showDialog() {
+    const dialog = document.getElementById('restorePwDialog');
+    dialog.classList.remove('hidden');
+}
+  
+function hideDialog() {
+    const dialog = document.getElementById('restorePwDialog');
+    dialog.classList.add('hidden');
+}
+  
+async function sendResetPwEmail() {
+    const email = document.getElementById('restoreEmail').value;
+    console.log(email)
+
+    const response = await fetch('/api/token/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+    });
+
+    hideDialog();
 }
