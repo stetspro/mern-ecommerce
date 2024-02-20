@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
         last_name: { type: String },
         email: { type: String, required: [true, "Email is required"], unique: true },
         password: { type: String },
-        role: { type: String, default: "USER_ROLE", enum: ["ADMIN_ROLE", "USER_ROLE"] },
+        role: { type: String, default: "USER_ROLE", enum: ["ADMIN_ROLE", "USER_ROLE", "PREMIUM_ROLE"] },
         status: { type: Boolean, default: true },
         creationDate: { type: Date, default: Date.now },
         cart: { type: mongoose.Schema.Types.ObjectId, ref: CartModel },
