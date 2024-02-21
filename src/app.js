@@ -102,14 +102,12 @@ socketServer.on('connection', async socket => {
     // <--- Real time products sockets --->
     socket.emit('products', await ProductService.getProducts(40));
 
-    socket.on("onaddproduct", async product => {
-        await ProductService.addProduct(product);
+    socket.on("onaddproduct", async () => {
         const data = await ProductService.getProducts(40);
         socketServer.sockets.emit('products', data);
     });
 
-    socket.on("ondeleteproduct", async pid => {
-        await ProductService.deleteProduct(pid);
+    socket.on("ondeleteproduct", async () => {
         const data = await ProductService.getProducts(40);
         socketServer.sockets.emit('products', data);  
     });

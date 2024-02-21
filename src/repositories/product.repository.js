@@ -24,7 +24,7 @@ export default class ProductRepository {
         return product.length === 0;
     }
 
-    addProduct = async ({title, description, price, thumbnail, code, stock, status, category }) => {
+    addProduct = async ({title, description, price, thumbnail, code, stock, status, category, owner }) => {
         try {
             if(!title || !description || !price || !category || !code || !stock || !category || !thumbnail) {
                 throw new Error("You must fill all the required fields.");
@@ -44,14 +44,15 @@ export default class ProductRepository {
                 code, 
                 stock,
                 status: status !== undefined ? status : true,
-                category
+                category,
+                owner
             };
-    
+  
             const res = await this.dao.createProduct(product);
-
             return res._id;
         }
         catch(error) {
+            logger.debug(error)
             throw new Error('Error while adding a product: ' + error.message);
         }   
     }
@@ -131,6 +132,17 @@ export default class ProductRepository {
         catch (err) {
             logger.error('Error while updating product stock: ' + err.message);
             throw new Error('Error while updating product stock: ' + err.message);
+        }
+    }
+
+    getProductOwner = async (id) => {
+        try {
+            const owner = await this.dao.getProductOwner(id);
+            return owner;
+        }
+        catch (err) {
+            logger.error('Error while getting product owner: ' + err.message);
+            throw new Error('Error while getting product owner: ' + err.message);
         }
     }
 }

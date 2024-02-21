@@ -1,4 +1,3 @@
-import { logger } from "../../utils/logger.js";
 import { UserModel } from "./models/user.model.js";
 
 export default class UserDAO {

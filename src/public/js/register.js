@@ -21,12 +21,12 @@ const onSubmit = async () => {
         } else {
             displayError(data.error);
         }
-
-        return false;
     }
     catch (error) {
         console.log("error: ", error);
     }
+
+    return false;
 }
 
 const displayError = (errorMsg) => {

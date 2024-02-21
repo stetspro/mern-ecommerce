@@ -1,6 +1,8 @@
 const socket = io();
 
-const addProduct = (e) => {
+const addProduct = async (e) => {
+    e.preventDefault();
+
     let title = document.getElementById("title").value;
     let code = document.getElementById("code").value;
     let price = document.getElementById("price").value;
@@ -15,7 +17,18 @@ const addProduct = (e) => {
     const category = toys && 'toys' || decoration && 'decoration' || accesories && 'accesories';
 
     const product = { title, code, price, stock, description, thumbnail, category };
-    socket.emit('onaddproduct', product);
+
+    const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(product),
+    });
+
+    if(response.ok) {
+        socket.emit('onaddproduct', product);
+    }
 
     cleanForm();
     
@@ -34,8 +47,18 @@ const cleanForm = () => {
     document.getElementById("category-accesories").checked = false;
 }
 
-const deleteProduct = (pid) => {
-    socket.emit('ondeleteproduct', pid);
+const deleteProduct = async (pid) => {
+    const response = await fetch('/api/products/' + pid, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+
+    if(response.ok) {
+        socket.emit('ondeleteproduct', pid);
+    }
+    
     return false;
 }
 

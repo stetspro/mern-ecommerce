@@ -32,4 +32,8 @@ export default class ProductDAO {
     async updateProductStock(id, quantity) {
         return await this.productModel.findByIdAndUpdate(id, { $inc: { stock: quantity } }, { new: true }).lean();
     }
+
+    async getProductOwner(id) {
+        return await this.productModel.findById(id).select({ owner: 1, _id: 0 });
+    }
 }
