@@ -1,3 +1,10 @@
+const resources = {
+    roleBtn: {
+        user_role: "Get Premium",
+        premium_role: "Unsubscribe from premium"
+    }
+}
+
 const getCurrentUser = async () => {
     const response = await fetch('/api/users/current', {
         method: 'GET',
@@ -7,6 +14,7 @@ const getCurrentUser = async () => {
     });
 
     const data = await response.json();
+    console.log(data)
    
     if(!data || data.error) {
         return;
@@ -36,16 +44,17 @@ const logout = async () => {
 
 const initializeHeader = async () => {
     let user = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : null;
-   
-    if (!user) {
+    
+    if (!user || Object.keys(user).length === 0) {
         user = await getCurrentUser();
+        console.log("initialize: ", user)
+        
         if(user && !user.message) sessionStorage["user"] = JSON.stringify(user);
     }
 
     if(user && !user.message) {
         const hiddenElements = document.querySelectorAll('.hidden');
-        const roleClass = user.role.toLowerCase();
-        
+        const roleClass = user?.role?.toLowerCase();
 
         hiddenElements.forEach(element => {
             element.classList.remove('hidden');
@@ -58,9 +67,38 @@ const initializeHeader = async () => {
         }
         
         document.querySelectorAll('.' + roleClass).forEach(element => {
-            console.log(element)
             element.classList.remove(roleClass);
         });
+
+        console.log(roleClass)
+        document.getElementById('switchRoleBtn').innerHTML = resources.roleBtn[roleClass];
+        
+    }
+}
+
+const getPremium = async () => {
+    let user = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : null;
+   
+    if (!user) {
+        user = await getCurrentUser();
+        if(user && !user.message) sessionStorage["user"] = JSON.stringify(user);
+    }
+
+    const response = await fetch('/api/users/premium/' + user.id, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if(response.ok) {
+        let btnHTML = document.getElementById('switchRoleBtn').innerHTML;
+
+        if(btnHTML == resources.roleBtn['premium_role']) {
+            document.getElementById('switchRoleBtn').innerHTML = resources.roleBtn['user_role'];
+        } else {
+            document.getElementById('switchRoleBtn').innerHTML = resources.roleBtn['premium_role'];
+        }
         
     }
 }

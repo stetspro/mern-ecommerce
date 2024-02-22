@@ -17,6 +17,10 @@ export default class UserDAO {
         return await this.userModel.findOne({ email: email });
     }
 
+    async getUserRole(uid) {
+        return await this.userModel.findById(uid).select({ role: 1, _id: 0 });
+    }
+
     async createUser(user) {
         return await this.userModel.create({ ...user });
     }

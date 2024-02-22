@@ -3,6 +3,6 @@ export default class CurrentUserDTO {
         this.email = user.email;
         this.role = user.role;
         this.cart = user.cart;
-        this.status = user.status;
+        this.id = user._id
     }
 }

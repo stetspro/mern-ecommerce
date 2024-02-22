@@ -52,4 +52,14 @@ export default class UserRepository {
             throw error;
         }
     }
+
+    getUserRole = async (userId) => {
+        try {
+            return this.userDao.getUserRole(userId);
+        }
+        catch (error) {
+            logger.error(error);
+            throw error;
+        }
+    }
 }

@@ -2,6 +2,7 @@ import { Router } from "express";
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 import { passportCall } from "../utils.js";
+import { logger } from "../utils/logger.js";
 
 export default class AppRouter {
 
@@ -58,6 +59,7 @@ export default class AppRouter {
       try {
         await callback.apply(this, params)
       } catch (error) {
+        logger.debug("catch: " + error)
         params[1].status(500).send(error)
       }
 

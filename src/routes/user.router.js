@@ -4,7 +4,8 @@ import {
     loginGithub,
     loginUser, 
     logoutUser, 
-    registerUser 
+    registerUser,
+    updateUserRole
 } from "../controllers/user.controller.js";
 import passport from "passport";
 
@@ -16,5 +17,6 @@ export default class UserRouter extends Router {
         this.get("/github", ["PUBLIC"], passport.authenticate("github", { scope: ["user:email"], session: false }), async (req, res) => {});
         this.get("/callbackgithub", ["PUBLIC"], passport.authenticate("github", { session: false }), loginGithub);
         this.get("/current", ["USER_ROLE", "ADMIN_ROLE", "PREMIUM_ROLE"], getCurrentUser);
+        this.put("/premium/:uid", ["USER_ROLE", "PREMIUM_ROLE"], updateUserRole)
     }
 }

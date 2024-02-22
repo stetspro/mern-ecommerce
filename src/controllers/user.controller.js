@@ -3,6 +3,7 @@ import { generateToken } from "../utils.js";
 import { createHash } from "../utils.js";
 import CurrentUserDTO from "../DTO/currentUser.dto.js";
 import CustomError from "../utils/errors/custom.errors.js";
+import { logger } from "../utils/logger.js";
 
 export const registerUser = async (req, res, next) => {
     const { password, confirmPassword } = req.body;
@@ -55,14 +56,7 @@ export const loginUser = async (req, res, next) => {
             maxAge: 24 * 60 * 60 * 1000 // 1 day
         });
 
-        const { cart, role, first_name, email } = req.user._doc;
-
-        const user = {
-            cart,
-            role,
-            first_name,
-            email
-        }
+        const user = new CurrentUserDTO(req.user._doc);
 
         return res.status(201).json(user);
     }
@@ -99,8 +93,17 @@ export const getCurrentUser = async (req, res) => {
     res.status(200).json(user);
 }
 
-export const sendPasswordLink = async (req, res) => {
-    if(!req.email) return res.status(400).json({ message: "Email is required"});
+export const updateUserRole = async (req, res) => {
+    const { uid } = req.params;
+    if(!uid) return res.sendBadRequest("User id is undefined or null");
 
+    const role = await UserService.getUserRole(uid);
 
+    if(role && role.role && role.role === 'ADMIN_ROLE') return res.sendBadRequest("Admin role can't be changed");
+
+    let newRole = 'PREMIUM_ROLE';
+    if(role && role.role && role.role === 'PREMIUM_ROLE') newRole = 'USER_ROLE';
+
+    const result = await UserService.updateUser(uid, { role: newRole });
+    res.sendSuccess(result);
 }
