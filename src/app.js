@@ -94,11 +94,6 @@ const socketServer = new Server(httpServer);
 socketServer.on('connection', async socket => {
     logger.debug("New client connection");
 
-    // <--- Product List sockets --->
-    socket.on("onaddtocart", async (data) => {
-        await CartService.addProductToCart(data.cid, data.pid);
-    });
-
     // <--- Real time products sockets --->
     socket.emit('products', await ProductService.getProducts(40));
 

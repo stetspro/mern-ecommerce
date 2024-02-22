@@ -70,7 +70,16 @@ const initializeHeader = async () => {
             element.classList.remove(roleClass);
         });
 
-        console.log(roleClass)
+        if(roleClass == 'premium_role') {
+            document.querySelectorAll('.user_role').forEach(element => {
+                element.classList.remove('user_role');
+            });
+
+            document.querySelectorAll('.admin_role').forEach(element => {
+                element.classList.remove('admin_role');
+            });
+        }
+
         document.getElementById('switchRoleBtn').innerHTML = resources.roleBtn[roleClass];
         
     }

@@ -1,4 +1,4 @@
-import { CartService } from "../repositories/index.js";
+import { CartService, ProductService } from "../repositories/index.js";
 import CustomError from "../utils/errors/custom.errors.js";
 
 export const createCart = async (req, res) => {
@@ -63,6 +63,7 @@ export const deleteCart = async (req, res) => {
 export const addProductInCart = async (req, res) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
+
     const quantity = parseInt(req.body.quantity);
 
     try {
@@ -85,8 +86,14 @@ export const addProductInCart = async (req, res) => {
 export const addNewProductToCart = async (req, res) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
+    const user = req.user.email;
 
     try {
+        const pOwner = await ProductService.getProductOwner(pid);  
+        if(pOwner.owner == user) {
+            return res.sendBadRequest("You cannot add your own products to the cart");
+        }      
+
         const result = await CartService.addProductToCart(cid, pid);
         return res.sendSuccess(result);
     }

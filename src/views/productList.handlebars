@@ -97,9 +97,16 @@
             cid: cid
         }
 
-        const socket = io();
-        socket.emit('onaddtocart', data);
-        return false;
+        const response = fetch('/api/carts/' + cid + "/products/" + pid, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        /*if(response.ok) {
+           
+        }*/
     }
     
     const goToCart = (cid) => {
