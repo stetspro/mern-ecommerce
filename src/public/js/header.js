@@ -102,6 +102,7 @@ const getPremium = async () => {
     if(response.ok) {
         const user = await getCurrentUser();
         if(user && !user.message) sessionStorage["user"] = JSON.stringify(user);
+        window.location.replace("/views/products");
     }
 }
 
