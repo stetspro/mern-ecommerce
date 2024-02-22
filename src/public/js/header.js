@@ -105,7 +105,7 @@ const getPremium = async () => {
 
         if(btnHTML == resources.roleBtn['premium_role']) {
             document.getElementById('switchRoleBtn').innerHTML = resources.roleBtn['user_role'];
-        } else {
+        } else if(btnHTML == resources.roleBtn['user_role']) {
             document.getElementById('switchRoleBtn').innerHTML = resources.roleBtn['premium_role'];
         }
         
