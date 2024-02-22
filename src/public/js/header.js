@@ -47,7 +47,6 @@ const initializeHeader = async () => {
     
     if (!user || Object.keys(user).length === 0) {
         user = await getCurrentUser();
-        console.log("initialize: ", user)
         
         if(user && !user.message) sessionStorage["user"] = JSON.stringify(user);
     }
@@ -101,14 +100,8 @@ const getPremium = async () => {
     });
 
     if(response.ok) {
-        let btnHTML = document.getElementById('switchRoleBtn').innerHTML;
-
-        if(btnHTML == resources.roleBtn['premium_role']) {
-            document.getElementById('switchRoleBtn').innerHTML = resources.roleBtn['user_role'];
-        } else if(btnHTML == resources.roleBtn['user_role']) {
-            document.getElementById('switchRoleBtn').innerHTML = resources.roleBtn['premium_role'];
-        }
-        
+        const user = await getCurrentUser();
+        if(user && !user.message) sessionStorage["user"] = JSON.stringify(user);
     }
 }
 
